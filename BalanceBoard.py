@@ -156,8 +156,8 @@ if __name__=="__main__":
 
     # Start coordinates of MPU6050.
     cursor = Cursor(size_x)
-    t0 = time.time()
-    next_t = dt
+    #t0 = time.time()
+    #next_t = dt
 
     # Starting game.
     difficulty = 1
