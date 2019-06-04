@@ -65,8 +65,8 @@ class Text:
 class Cursor:
     def __init__(self, display_width, x_center, y_center, color=(0, 0, 0)):
         self.color = color
-        self.x_prec = x_center
-        self.y_prec = y_center
+        self.x = x_center
+        self.y = y_center
         self.gain = display_width / 90
         self.mpu6050 = MPU6050()
 
@@ -94,9 +94,10 @@ class Cursor:
         self.angle_x_filtre = self.K * (self.angle_x_filtre + gyro_x_delta) + (self.K1 * x_rotation)
         self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation)
 
-        x, y = self.gain * (self.angle_x_filtre - self.x_prec), self.gain * (self.angle_y_filtre - self.y_prec)
-        self.x_prec = self.angle_x_filtre
-        self.y_prec = self.angle_y_filtre
+        dx, dy = self.gain * (self.angle_x_filtre - self.x), self.gain * (self.angle_y_filtre - self.y)
+        self.x, self.y =  self.x + dx, self.y + dy
+        self.x = self.angle_x_filtre
+        self.y = self.angle_y_filtre
 
         return int(x), int(y)
 
