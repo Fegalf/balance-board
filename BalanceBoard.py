@@ -64,7 +64,7 @@ class Text:
 
 class Cursor:
     def __init__(self, display_width, color=(0, 0, 0)):
-        self.color
+        self.color = color
         self.x_prec = 0
         self.y_prec = 0
         self.gain = display_width / 90
