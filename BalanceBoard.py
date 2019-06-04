@@ -81,7 +81,7 @@ class Cursor:
 
         self.dt = 0.01
         self.K = 0.98
-        self.K1 = 1 - K
+        self.K1 = 1 - self.K
 
     def get_position(self,):
         x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = mpu6050.read_data()
