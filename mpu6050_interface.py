@@ -11,11 +11,11 @@ class MPU6050:
     def __init__(self,):
         self.bus = SMBus(1)
         self.address = 0x68
-        self.bus.write_byte_data(address, 0x6b, 0)
-        self.bus.write_byte_data(address, 26, 3)
+        self.bus.write_byte_data(self.address, 0x6b, 0)
+        self.bus.write_byte_data(self.address, 26, 3)
 
     def read_data(self,):
-        raw_data = self.bus.read_i2c_block_data(addr, 0x3B, 14)
+        raw_data = self.bus.read_i2c_block_data(self.address, 0x3B, 14)
         acc_x = (raw_data[0] << 8) + raw_data[1]
 
         if acc_x >= 0x8000:
