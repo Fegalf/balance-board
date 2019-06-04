@@ -114,7 +114,7 @@ K = 0.98
 K1 = 1 - K
 
 
-nomDuFichier = '/home/pi/Documents/Projet_Chloe/Fichiers mesures/mesures.csv'
+nomDuFichier = '/mesures/mesures.csv'
 
 #Dessin de la zone graphique
 largeur = 800
