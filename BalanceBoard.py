@@ -83,7 +83,7 @@ class Cursor:
         self.K = 0.98
         self.K1 = 1 - self.K
 
-    def get_position(self,):
+    def update_position(self,):
         x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
         print(x_rotation, y_rotation, accel_zout, x_gyro, y_gyro)
 
@@ -97,8 +97,6 @@ class Cursor:
 
         dx, dy = self.gain * (self.angle_x_filtre - self.x), self.gain * (self.angle_y_filtre - self.y)
         self.x, self.y =  int(self.x + dx), int(self.y + dy)
-
-        return self.x, self.y
 
     def draw(self, display):
         pygame.draw.circle(display, self.color, self.get_position(), 5)
@@ -208,8 +206,10 @@ if __name__=="__main__":
         text_timer.draw(display, x_pos - 30, 75)
 
         # Get position of the mouse cursor and draw a red circle on it.
-        #pygame.draw.circle(display, black, pygame.mouse.get_pos(), cursor_r)
-        cursor.draw(display)
+        pygame.draw.circle(display, black, pygame.mouse.get_pos(), cursor_r)
+        #cursor.draw(display)
+        cursor.update_position()
+        print(cursor.x, cursor.y)
         pygame.display.update()
 
     pygame.quit()
