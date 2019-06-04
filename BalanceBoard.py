@@ -65,8 +65,8 @@ class Text:
 class Cursor:
     def __init__(self, display_width, x_center, y_center, color=(0, 0, 0)):
         self.color = color
-        self.x_prec = 0
-        self.y_prec = 0
+        self.x_prec = x_center
+        self.y_prec = y_center
         self.gain = display_width / 90
         self.mpu6050 = MPU6050()
 
