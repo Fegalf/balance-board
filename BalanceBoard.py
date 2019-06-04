@@ -96,8 +96,8 @@ class Cursor:
 
         dx, dy = self.gain * (self.angle_x_filtre - self.x), self.gain * (self.angle_y_filtre - self.y)
         self.x, self.y =  int(self.x + dx), int(self.y + dy)
-        #self.x = self.angle_x_filtre
-        #self.y = self.angle_y_filtre
+        self.x = self.angle_x_filtre
+        self.y = self.angle_y_filtre
 
         return self.x, self.y
 
