@@ -85,10 +85,11 @@ class Cursor:
 
     def update_position(self,):
         x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
-        print(x_rotation, y_rotation, accel_zout, x_gyro, y_gyro)
 
         gyro_x_delta = x_gyro - self.gyro_offset_x
         gyro_y_delta = y_gyro - self.gyro_offset_y
+
+        print(gyro_x_delta, gyro_y_delta)
 
         self.gyro_total_x += gyro_x_delta
         self.gyro_total_y += gyro_y_delta
