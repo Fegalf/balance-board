@@ -94,7 +94,7 @@ class Cursor:
         self.angle_x_filtre = self.K * (self.angle_x_filtre + gyro_x_delta) + (self.K1 * x_rotation)
         self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation)
 
-        x, y = gain * (self.angle_x_filtre - self.x_prec), self.gain * (self.angle_y_filtre - self.y_prec)
+        x, y = self.gain * (self.angle_x_filtre - self.x_prec), self.gain * (self.angle_y_filtre - self.y_prec)
         self.x_prec = self.angle_x_filtre
         self.y_prec = self.angle_y_filtre
 
