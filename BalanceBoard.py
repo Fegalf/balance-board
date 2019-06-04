@@ -76,7 +76,7 @@ big_circle_r = 200
 small_circle_r = int(big_circle_r - 0.1*big_circle_r)
 
 # Set time between difficulty changes (defaults = 10 seconds).
-timer_length = 2
+timer_length = 10
 
 # Colors in RGB.
 green = (22, 100, 27)
@@ -100,7 +100,6 @@ x_pos, y_pos = (size_x//2, size_y//2)
 big_circle = EmptyCircle(x_pos, y_pos, big_circle_r)
 small_circle = EmptyCircle(x_pos, y_pos, small_circle_r)
 timer_10s = Timer(timer_length)
-
 
 # Font parameters and text initialization.
 pygame.font.init()
