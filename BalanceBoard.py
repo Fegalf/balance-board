@@ -1,6 +1,7 @@
 import pygame
 from pygame import gfxdraw
 import numpy as np
+from mpu6050_interface import MPU6050
 
 class Timer:
     def __init__(self, seconds):
@@ -61,6 +62,46 @@ class Text:
     def hide(self,):
         self.change_text("")
 
+class Cursor:
+    def __init__(self, color=(0, 0, 0)):
+        self.color
+        self.x_prec = 0
+        self.y_prec = 0
+        self.gain = largeur / 90
+        self.mpu6050 = MPU6050()
+
+        x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
+
+        self.angle_x_filtre = x_rotation
+        self.angle_y_filtre = y_rotation
+        self.gyro_offset_x = x_gyro
+        self.gyro_offset_y = y_gyro
+        self.gyro_total_x = (angle_x_filtre) - gyro_offset_x
+        self.gyro_total_y = (angle_y_filtre) - gyro_offset_y
+
+        self.dt = 0.01
+        self.K = 0.98
+        self.K1 = 1 - K
+
+    def get_position(self,):
+        x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = mpu6050.read_data()
+
+        gyro_x_delta = self.dt * (x_gyro - self.gyro_offset_x)
+        gyro_y_delta = self.dt * (y_gyro - self.gyro_offset_y)
+
+        self.gyro_total_x = self.gyro_total_x + self.gyro_x_delta
+        self.gyro_total_y = self.gyro_total_y + self.gyro_y_delta
+        self.angle_x_filtre = self.K * (self.angle_x_filtre + gyro_x_delta) + (self.K1 * x_rotation)
+        self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation)
+
+        x, y = gain * (self.angle_x_filtre - self.x_prec), self.gain * (self.angle_y_filtre - self.y_prec)
+        self.x_prec = self.angle_x_filtre
+        self.y_prec = self.angle_y_filtre
+
+        return x, y
+
+    def draw(self, display):
+        pygame.draw.circle(display, self.color, self.get_position(), 5)
 
 def display_congrats(display):
     myfont = pygame.font.SysFont('elephant', 70)
@@ -70,7 +111,13 @@ def display_congrats(display):
     pygame.display.update()
     pygame.time.delay(4000)
 
+
 if __name__=="__main__":
+
+    # Initialize mesures file.
+    nomDuFichier = './mesures/mesures.csv'
+    fichierData = open(nomDuFichier, 'w')
+
     # Initialize circles radiuses (in pixels).
     cursor_r = 5
     big_circle_r = 135
@@ -106,6 +153,11 @@ if __name__=="__main__":
     pygame.font.init()
     myfont = pygame.font.SysFont('elephant', 80)
     text_timer = Text('', 0, 0)
+
+    # Start coordinates of MPU6050.
+    cursor = Cursor()
+    t0 = time.time()
+    next_t = dt
 
     # Starting game.
     difficulty = 1
@@ -156,7 +208,8 @@ if __name__=="__main__":
         text_timer.draw(display, x_pos - 30, 75)
 
         # Get position of the mouse cursor and draw a red circle on it.
-        pygame.draw.circle(display, black, pygame.mouse.get_pos(), cursor_r)
+        #pygame.draw.circle(display, black, pygame.mouse.get_pos(), cursor_r)
+        cursor.draw(display)
         pygame.display.update()
 
     pygame.quit()

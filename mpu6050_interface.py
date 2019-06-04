@@ -56,42 +56,13 @@ K = 0.98
 K1 = 1 - K
 
 nomDuFichier = './mesures/mesures.csv'
-
-#Dessin de la zone graphique
-largeur = 800
-hauteur = 800
-win = GraphWin("Angle de la planche", largeur, hauteur)
-
-pt = Point(largeur/2, hauteur/2)
-cir0 = Circle(pt, largeur*15/90)
-cir0.setOutline("yellow")
-cir0.draw(win)
-cir1 = Circle(pt, largeur*5/90)
-cir1.setOutline("green")
-cir1.draw(win)
-linh = Line(Point(largeur/2, hauteur-30), Point(largeur/2, 30))
-linh.draw(win)
-linv = Line(Point(30, hauteur/2), Point(largeur-30, hauteur/2))
-linv.draw(win)
-cir = Circle(pt, 8)
-cir.setFill("green")
-cir.draw(win)
-
-x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = mpu6050.read_data()
-print("Avant tout: X={0:4.1f} deg, Y={1:4.1f} deg, z={2:4.1f} g, gyro_X={3:4.1f}, gyro_Y={4:4.1f}".format(x_rotation, y_rotation,accel_zout,x_gyro,y_gyro))
-
-print("Départ: z={0:4.1f}".format(accel_zout))
-print("Angle de rotation X,Y")
-print("---------------------")
-
 fichierData = open(nomDuFichier, 'w')
 
-# Coordonnées de départ au centre
+# Start coordinates.
 x_prec = 0
 y_prec = 0
 gain = largeur/90 # 90degrés font la pleine largeur d'affichage
 
-now = time.time()
 x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = mpu6050.read_data()
 angle_x_filtre = x_rotation
 angle_y_filtre = y_rotation
@@ -100,15 +71,11 @@ gyro_offset_y = y_gyro
 gyro_total_x = (angle_x_filtre) - gyro_offset_x
 gyro_total_y = (angle_y_filtre) - gyro_offset_y
 
+t0 = time.time()
 next_t = dt
 
-pause = next_t-(time.time()-now)
-if (pause>0):
-    time.sleep(pause)
-
-clickPoint = win.checkMouse()
 while (clickPoint == None):
-    t = time.time()-now
+    t = time.time()-t0
     x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = mpu6050.read_data()
 
     gyro_x_delta = dt*(x_gyro-gyro_offset_x)
@@ -127,20 +94,10 @@ while (clickPoint == None):
                                                     angle_x_filtre,angle_y_filtre))
     x_prec = angle_x_filtre
     y_prec = angle_y_filtre
-
-    clickPoint = win.checkMouse()
-
     next_t = next_t + dt
-    pause = next_t-(time.time()-now)
-    if (pause>0):
-        time.sleep(pause)
 
 fichierData.close()
 print("Les mesures sont dans ", nomDuFichier)
-
-win.close()
-
-print(clickPoint)
 
 # On relie le fichier
 fichierData = open(nomDuFichier, 'r')
