@@ -76,8 +76,8 @@ class Cursor:
         self.angle_y_filtre = y_rotation
         self.gyro_offset_x = x_gyro
         self.gyro_offset_y = y_gyro
-        self.gyro_total_x = (angle_x_filtre) - gyro_offset_x
-        self.gyro_total_y = (angle_y_filtre) - gyro_offset_y
+        self.gyro_total_x = (self.angle_x_filtre) - self.gyro_offset_x
+        self.gyro_total_y = (self.angle_y_filtre) - self.gyro_offset_y
 
         self.dt = 0.01
         self.K = 0.98
