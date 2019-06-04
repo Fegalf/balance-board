@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # -*- coding: latin-1 -*-
-#import smbus
 from smbus2 import SMBus
 import math
-#import graphics
 from graphics import *
 import time
 import matplotlib.pyplot as plt
@@ -142,7 +140,7 @@ cir.draw(win)
 #label = Text(Point(100, 120), 'Du texte')
 #label.draw(win)
 
-message = Text(Point(win.getWidth()/2, 10), "Click n'importe où pour terminer")
+message = Text(Point(win.getWidth()/2, 10), "Click n'importe ou pour terminer")
 message.draw(win)
 #win.getMouse()
 
