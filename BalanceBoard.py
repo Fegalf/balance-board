@@ -95,11 +95,11 @@ class Cursor:
         self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation)
 
         dx, dy = self.gain * (self.angle_x_filtre - self.x), self.gain * (self.angle_y_filtre - self.y)
-        self.x, self.y =  self.x + dx, self.y + dy
-        self.x = self.angle_x_filtre
-        self.y = self.angle_y_filtre
+        self.x, self.y =  int(self.x + dx), int(self.y + dy)
+        #self.x = self.angle_x_filtre
+        #self.y = self.angle_y_filtre
 
-        return int(x), int(y)
+        return self.x, self.y
 
     def draw(self, display):
         pygame.draw.circle(display, self.color, self.get_position(), 5)
