@@ -70,91 +70,93 @@ def display_congrats(display):
     pygame.display.update()
     pygame.time.delay(4000)
 
-# Initialize circles radiuses (in pixels).
-cursor_r = 5
-big_circle_r = 200
-small_circle_r = int(big_circle_r - 0.1*big_circle_r)
+if __name__=="__main__":
+    # Initialize circles radiuses (in pixels).
+    cursor_r = 5
+    big_circle_r = 200
+    small_circle_r = int(big_circle_r - 0.1*big_circle_r)
 
-# Set time between difficulty changes (defaults = 10 seconds).
-timer_length = 10
+    # Set time between difficulty changes (defaults = 10 seconds).
+    timer_length = 10
 
-# Colors in RGB.
-green = (22, 100, 27)
-orange = (115, 100, 22)
-red = (150, 25, 25)
-black = (0, 0, 0)
-white = (255, 255, 255)
+    # Colors in RGB.
+    green = (22, 100, 27)
+    orange = (115, 100, 22)
+    red = (150, 25, 25)
+    black = (0, 0, 0)
+    white = (255, 255, 255)
 
-# Init top window in full screen.
-pygame.init()
-display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-pygame.display.set_caption("Balance Board")
+    # Init top window in full screen.
+    pygame.init()
+    display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    pygame.display.set_caption("Balance Board")
 
-# Get width and height of display.
-size_x, size_y = pygame.display.get_surface().get_size()
+    # Get width and height of display.
+    size_x, size_y = pygame.display.get_surface().get_size()
 
-# Find center of display.
-x_pos, y_pos = (size_x//2, size_y//2)
+    # Find center of display.
+    x_pos, y_pos = (size_x//2, size_y//2)
 
-# Create circles and start timer.
-big_circle = EmptyCircle(x_pos, y_pos, big_circle_r)
-small_circle = EmptyCircle(x_pos, y_pos, small_circle_r)
-timer_10s = Timer(timer_length)
+    # Create circles and start timer.
+    big_circle = EmptyCircle(x_pos, y_pos, big_circle_r)
+    small_circle = EmptyCircle(x_pos, y_pos, small_circle_r)
+    timer_10s = Timer(timer_length)
 
-# Font parameters and text initialization.
-pygame.font.init()
-myfont = pygame.font.SysFont('elephant', 80)
-text_timer = Text('', 0, 0)
+    # Font parameters and text initialization.
+    pygame.font.init()
+    myfont = pygame.font.SysFont('elephant', 80)
+    text_timer = Text('', 0, 0)
 
-# Starting game.
-difficulty = 1
-bg_color = red
-run = True
-while run:
-    pygame.time.delay(10)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+    # Starting game.
+    difficulty = 1
+    bg_color = red
+    run = True
+    while run:
+        pygame.time.delay(10)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 run = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    run = False
 
-    if big_circle.cursor_is_inside():
-        if not small_circle.cursor_is_inside():
-            bg_color = orange
+        if big_circle.cursor_is_inside():
+            if not small_circle.cursor_is_inside():
+                bg_color = orange
+                timer_10s.reset()
+                text_timer.hide()
+
+            else:
+                bg_color = green
+                remaining_time = str(timer_10s.get_remaining_time())
+                text_timer.change_text(remaining_time)
+
+        else:
+            bg_color = red
             timer_10s.reset()
             text_timer.hide()
 
-        else:
-            bg_color = green
-            remaining_time = str(timer_10s.get_remaining_time())
-            text_timer.change_text(remaining_time)
+        if timer_10s.is_over():
+            difficulty += 1
+            if difficulty == 9:
+                display_congrats(display)
+                run = False
+                break
+            new_radius = small_circle_r - int((difficulty / 10) * big_circle_r)
+            small_circle.update_radius(new_radius)
+            timer_10s.reset()
 
-    else:
-        bg_color = red
-        timer_10s.reset()
-        text_timer.hide()
+        # Draw background and circles.
+        display.fill(bg_color)
+        big_circle.draw(display)
+        small_circle.draw(display)
 
-    if timer_10s.is_over():
-        difficulty += 1
-        if difficulty == 9:
-            display_congrats(display)
-            run = False
-            break
-        new_radius = small_circle_r - int((difficulty / 10) * big_circle_r)
-        small_circle.update_radius(new_radius)
-        timer_10s.reset()
+        # Draw text.
+        #display.blit(textsurface, (x_pos - 30, 75 ))
+        text_timer.draw(display, x_pos - 30, 75)
 
-    # Draw background and circles.
-    display.fill(bg_color)
-    big_circle.draw(display)
-    small_circle.draw(display)
+        # Get position of the mouse cursor and draw a red circle on it.
+        pygame.draw.circle(display, black, pygame.mouse.get_pos(), cursor_r)
+        pygame.display.update()
 
-    # Draw text.
-    #display.blit(textsurface, (x_pos - 30, 75 ))
-    text_timer.draw(display, x_pos - 30, 75)
-
-    # Get position of the mouse cursor and draw a red circle on it.
-    pygame.draw.circle(display, black, pygame.mouse.get_pos(), cursor_r)
-    pygame.display.update()
-pygame.quit()
+    pygame.quit()
