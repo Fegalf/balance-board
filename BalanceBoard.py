@@ -63,11 +63,11 @@ class Text:
         self.change_text("")
 
 class Cursor:
-    def __init__(self, color=(0, 0, 0)):
+    def __init__(self, display_width, color=(0, 0, 0)):
         self.color
         self.x_prec = 0
         self.y_prec = 0
-        self.gain = largeur / 90
+        self.gain = display_width / 90
         self.mpu6050 = MPU6050()
 
         x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
@@ -155,7 +155,7 @@ if __name__=="__main__":
     text_timer = Text('', 0, 0)
 
     # Start coordinates of MPU6050.
-    cursor = Cursor()
+    cursor = Cursor(size_x)
     t0 = time.time()
     next_t = dt
 
