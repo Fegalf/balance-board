@@ -98,7 +98,7 @@ class Cursor:
         self.x_prec = self.angle_x_filtre
         self.y_prec = self.angle_y_filtre
 
-        return x, y
+        return int(x), int(y)
 
     def draw(self, display):
         pygame.draw.circle(display, self.color, self.get_position(), 5)
