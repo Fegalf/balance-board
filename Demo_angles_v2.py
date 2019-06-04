@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: latin-1 -*-
 #import smbus
 from smbus2 import SMBus
 import math
