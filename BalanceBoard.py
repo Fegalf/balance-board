@@ -73,7 +73,7 @@ def display_congrats(display):
 if __name__=="__main__":
     # Initialize circles radiuses (in pixels).
     cursor_r = 5
-    big_circle_r = 200
+    big_circle_r = 135
     small_circle_r = int(big_circle_r - 0.1*big_circle_r)
 
     # Set time between difficulty changes (defaults = 10 seconds).
