@@ -115,7 +115,7 @@ K = 0.98
 K1 = 1 - K
 
 
-nomDuFichier = '/mesures/mesures.csv'
+nomDuFichier = './mesures/mesures.csv'
 
 #Dessin de la zone graphique
 largeur = 800
