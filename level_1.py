@@ -6,7 +6,7 @@ big_circle_r = 150
 small_circle_r = int(big_circle_r - 0.1*big_circle_r)
 
 # Set time between difficulty changes (defaults = 10 seconds).
-timer_length = 2
+timer_length = 10
 
 # Number of difficulty levels.
 n_difficulty_levels = 9
