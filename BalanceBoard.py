@@ -1,6 +1,9 @@
 import pygame
 from pygame import gfxdraw
+import matplotlib.pyplot as plt
 import numpy as np
+import time
+
 from mpu6050_interface import MPU6050
 
 class Timer:
@@ -26,9 +29,9 @@ class EmptyCircle:
         self.radius = radius
         self.color = color
 
-    def cursor_is_inside(self,):
+    def cursor_is_inside(self, cursor):
         # Get mouse position.
-        cursor_x, cursor_y = pygame.mouse.get_pos()
+        cursor_x, cursor_y = cursor.get_position()
 
         # Compute circle range.
         r = np.sqrt((cursor_x - self.x) ** 2 + (cursor_y - self.y) ** 2)
@@ -48,13 +51,16 @@ class EmptyCircle:
 
 class Text:
     def __init__(self, text, x, y, color=(255, 255, 255)):
-        self.textsurface = myfont.render(text, True, white)
         self.x = x
         self.y = y
         self.color = color
 
+        pygame.font.init()
+        self.myfont = pygame.font.SysFont('elephant', 80)
+        self.textsurface = self.myfont.render(text, True, self.color)
+        
     def change_text(self, text):
-        self.textsurface = myfont.render(text, True, white)
+        self.textsurface = self.myfont.render(text, True, self.color)
 
     def draw(self, display, x, y):
         display.blit(self.textsurface, (x, y))
@@ -63,15 +69,17 @@ class Text:
         self.change_text("")
 
 class Cursor:
-    def __init__(self, display_width, x_center, y_center, color=(0, 0, 0)):
+    def __init__(self, big_circle_r, x_center, y_center, cursor_r, color=(0, 0, 0)):
         self.color = color
         self.x = x_center
         self.y = y_center
-        self.gain = display_width / 90
+        
+        self.x_center = x_center
+        self.y_center = y_center
+        self.gain = 6*big_circle_r / 90
         self.mpu6050 = MPU6050()
 
         x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
-
         self.angle_x_filtre = x_rotation
         self.angle_y_filtre = y_rotation
         self.gyro_offset_x = x_gyro
@@ -80,137 +88,134 @@ class Cursor:
         self.gyro_total_y = (self.angle_y_filtre) - self.gyro_offset_y
 
         self.dt = 0.01
-        self.K = 0.98
+        self.K = 0.945
         self.K1 = 1 - self.K
 
     def update_position(self,):
-        x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
-
-        gyro_x_delta = x_gyro - self.gyro_offset_x
-        gyro_y_delta = y_gyro - self.gyro_offset_y
-
-        print(gyro_x_delta, gyro_y_delta)
+        x_rotation, y_rotation, _, x_gyro, y_gyro = self.mpu6050.read_data()
+        self.x_rotation = x_rotation
+        self.y_rotation = y_rotation
+        
+        gyro_x_delta = self.dt*(x_gyro - self.gyro_offset_x)
+        gyro_y_delta = self.dt*(y_gyro - self.gyro_offset_y)
 
         self.gyro_total_x += gyro_x_delta
         self.gyro_total_y += gyro_y_delta
+        
         self.angle_x_filtre = self.K * (self.angle_x_filtre + gyro_x_delta) + (self.K1 * x_rotation)
         self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation)
-
-        dx, dy = self.gain * (self.angle_x_filtre - self.x), self.gain * (self.angle_y_filtre - self.y)
-        self.x, self.y =  int(self.x + dx), int(self.y + dy)
-
+        
+        # Updating pixel values and averaging with previous value (smoother).
+        self.x = int((self.x + self.x_center + self.gain * self.angle_x_filtre)//2)
+        self.y = int((self.y + self.y_center + self.gain * self.angle_y_filtre)//2)
+        
     def draw(self, display):
-        pygame.draw.circle(display, self.color, self.get_position(), 5)
+        pygame.draw.circle(display, self.color, self.get_position(), 6)
+        
+    def get_position(self,):
+        self.update_position()
+        return self.x, self.y
 
-def display_congrats(display):
+class DataFile:
+    def __init__(self, path_to_csv_file):
+        self.f = open(path_to_csv_file, 'w')
+        self.t0 = time.time()
+    
+        self.f.write("{0:}, {1:}, {2:}, {3:}, {4:}, "
+                     "{5:}, {6:}\n".format('time',
+                                                   'x_rotation',
+                                                   'y_rotation',
+                                                   'gyro_total_x',
+                                                   'gyro_total_y',
+                                                   'angle_x',
+                                                   'angle_y'))
+        
+    def __exit__(self,):
+        self.f.close()
+        
+    def record_mpu6050_data(self, cursor):
+        t = time.time() - self.t0
+        self.f.write("{0:10f}, {1:4.1f}, {2:4.1f}, {3:4.1f}, {4:4.1f}, "
+                      "{5:4.1f}, {6:4.1f}\n".format(t, cursor.x_rotation,
+                                                    cursor.y_rotation,
+                                                    cursor.gyro_total_x,
+                                                    cursor.gyro_total_y,
+                                                    cursor.angle_x_filtre,
+                                                    cursor.angle_y_filtre))
+        
+
+def plot_session_graphs(path_to_file):
+    fichierData = open(path_to_file, 'r')
+    time = []
+    angleX = []
+    angleY = []
+    accX = []
+    accY = []
+    gyroX = []
+    gyroY = []
+    
+    # skip headers line.
+    next(fichierData)
+    
+    for x in fichierData:
+      ledata = [float(y) for y in x.split(', ')]
+      time.append(ledata[0])
+      accX.append(ledata[1])
+      accY.append(ledata[2])
+      gyroX.append(ledata[3])
+      gyroY.append(ledata[4])
+      angleX.append(ledata[5])
+      angleY.append(ledata[6])
+
+    fichierData.close()
+
+    plt.figure(1)  
+    plt.subplot(221)
+    plt.plot(time, angleX)
+    plt.xlabel('time [sec]')
+    plt.ylabel('angle X [deg]')
+    plt.grid(True)
+    plt.subplot(222)
+    plt.hist(angleX, 50, density=1, facecolor='g', alpha=0.75)
+    plt.xlabel('angle X [deg]')
+    plt.title("$\mu_x$={0:4.1f}$^\circ$, $\sigma_x$={1:4.1f}$^\circ$".format(np.mean(angleX), np.std(angleX)))
+    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+    plt.grid(True)
+    plt.subplot(223)
+    plt.plot(time,angleY)
+    plt.xlabel('time [sec]')
+    plt.ylabel('angle Y [deg]')
+    plt.grid(True)
+    plt.subplot(224)
+    plt.hist(angleY, 50, density=1, facecolor='g', alpha=0.75)
+    plt.xlabel('angle Y [deg]')
+    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+    plt.title("$\mu_y$={0:4.1f}$^\circ$, $\sigma_y$={1:4.1f}$^\circ$".format(np.mean(angleY),np.std(angleY)))
+    plt.grid(True)
+    #plt.show()
+
+    plt.figure(2)
+    plt.subplot(211)
+    plt.plot(time, angleX, time, gyroX, time, accX)
+    plt.xlabel('time [sec]')
+    plt.ylabel('angle X [deg]')
+    plt.grid(True)
+    plt.title('Les angles')
+    plt.subplot(212)
+    plt.plot(time, angleY, time, gyroY, time, accY)
+    plt.xlabel('time [sec]')
+    plt.ylabel('angle Y [deg]')
+    plt.grid(True)
+    plt.show()
+
+
+def display_congrats(display, bg_color, text_color):
     myfont = pygame.font.SysFont('elephant', 70)
     display.fill(bg_color)
-    textsurface = myfont.render("Félicitations!", True, white)
-    display.blit(textsurface, (x_pos - 150, y_pos - 70))
+    textsurface = myfont.render("Félicitations!", True, text_color)
+    
+    x_center, y_center = pygame.display.get_surface().get_size()
+    display.blit(textsurface, (x_center//2- 150, y_center//2 - 70))
     pygame.display.update()
     pygame.time.delay(4000)
 
-
-if __name__=="__main__":
-
-    # Initialize mesures file.
-    nomDuFichier = './mesures/mesures.csv'
-    fichierData = open(nomDuFichier, 'w')
-
-    # Initialize circles radiuses (in pixels).
-    cursor_r = 5
-    big_circle_r = 135
-    small_circle_r = int(big_circle_r - 0.1*big_circle_r)
-
-    # Set time between difficulty changes (defaults = 10 seconds).
-    timer_length = 10
-
-    # Colors in RGB.
-    green = (22, 100, 27)
-    orange = (115, 100, 22)
-    red = (150, 25, 25)
-    black = (0, 0, 0)
-    white = (255, 255, 255)
-
-    # Init top window in full screen.
-    pygame.init()
-    display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-    pygame.display.set_caption("Balance Board")
-
-    # Get width and height of display.
-    size_x, size_y = pygame.display.get_surface().get_size()
-
-    # Find center of display.
-    x_pos, y_pos = (size_x//2, size_y//2)
-
-    # Create circles and start timer.
-    big_circle = EmptyCircle(x_pos, y_pos, big_circle_r)
-    small_circle = EmptyCircle(x_pos, y_pos, small_circle_r)
-    timer_10s = Timer(timer_length)
-
-    # Font parameters and text initialization.
-    pygame.font.init()
-    myfont = pygame.font.SysFont('elephant', 80)
-    text_timer = Text('', 0, 0)
-
-    # Start coordinates of MPU6050.
-    cursor = Cursor(size_x, size_x//2, size_y//2)
-    #t0 = time.time()
-    #next_t = dt
-
-    # Starting game.
-    difficulty = 1
-    bg_color = red
-    run = True
-    while run:
-        pygame.time.delay(10)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    run = False
-
-        if big_circle.cursor_is_inside():
-            if not small_circle.cursor_is_inside():
-                bg_color = orange
-                timer_10s.reset()
-                text_timer.hide()
-
-            else:
-                bg_color = green
-                remaining_time = str(timer_10s.get_remaining_time())
-                text_timer.change_text(remaining_time)
-
-        else:
-            bg_color = red
-            timer_10s.reset()
-            text_timer.hide()
-
-        if timer_10s.is_over():
-            difficulty += 1
-            if difficulty == 9:
-                display_congrats(display)
-                run = False
-                break
-            new_radius = small_circle_r - int((difficulty / 10) * big_circle_r)
-            small_circle.update_radius(new_radius)
-            timer_10s.reset()
-
-        # Draw background and circles.
-        display.fill(bg_color)
-        big_circle.draw(display)
-        small_circle.draw(display)
-
-        # Draw text.
-        #display.blit(textsurface, (x_pos - 30, 75 ))
-        text_timer.draw(display, x_pos - 30, 75)
-
-        # Get position of the mouse cursor and draw a red circle on it.
-        pygame.draw.circle(display, black, pygame.mouse.get_pos(), cursor_r)
-        #cursor.draw(display)
-        cursor.update_position()
-        print(cursor.x, cursor.y)
-        pygame.display.update()
-
-    pygame.quit()
