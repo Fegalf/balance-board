@@ -1,4 +1,6 @@
-from BalanceBoard import *
+import pygame
+from BalanceBoard import Timer, EmptyCircle, Text, \
+    Cursor, DataFile, plot_session_graphs, display_congrats
 
 # Initialize circles radiuses (in pixels).
 cursor_r = 5
