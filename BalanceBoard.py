@@ -4,7 +4,7 @@ import numpy as np
 import time
 from pygame import gfxdraw
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE
-#from mpu6050_interface import MPU6050
+from mpu6050_interface import MPU6050
 
 class Timer:
     def __init__(self, seconds):
