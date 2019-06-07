@@ -1,20 +1,9 @@
 import pygame
-from colors import GREEN, ORANGE, RED, BLACK, WHITE
+import math
+from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
                          plot_session_graphs, display_congrats, \
                          point_inside_polygon, Mouse, Course
-
-# Initialize circles radiuses (in pixels).
-cursor_r = 5
-big_circle_r = 30
-
-# Set time between difficulty changes (defaults = 10 seconds).
-timer_length = 3
-
-# Colors of elements.
-cursor_color = BLACK
-timer_color = WHITE
-big_circle_color = WHITE
 
 # Init top window in full screen.
 pygame.init()
@@ -24,81 +13,92 @@ pygame.display.set_caption("Balance Board")
 # Find height of display.
 height = pygame.display.get_surface().get_size()[1]
 
+############################## LEVELS PARAMETERS ##############################
+
+START_CIRCLE_RADIUS = 30
+END_CIRCLE_RADIUS_easy = 90
+END_CIRCLE_RADIUS_medium = 60
+END_CIRCLE_RADIUS_hard = 30
+
+TIME_BETWEEN_SUBLEVELS_CHANGES = 3
+GAIN_OF_MPU6050 = 10  # Gain values should be calibrated using the balance board (trials and errors).
+MAXIMUM_NUMBER_OF_FAILS = 3
+
+# Each line represents a sublevel's angle, distance from the screen's center, radius of starting circle and radius of end circle.
+SUBLEVELS = [(90, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (180, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (0, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (135, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (45, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (270, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (90, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (180, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (0, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (135, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (45, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (270, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (90, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (180, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (0, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (135, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (45, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (270, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
+          (90, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (180, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (0, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (135, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (45, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (270, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (90, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (180, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (0, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (135, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (45, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (270, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (90, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (180, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (0, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (135, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (45, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (270, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
+          (90, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (180, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (0, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (135, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (45, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (270, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (90, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (180, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (0, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (135, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (45, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (270, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (90, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (180, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (0, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (135, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (45, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
+          (270, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard)]
+
+###################################################################################
+
+# Set time between sublevel changes (default: 3 seconds).
+timer_length = TIME_BETWEEN_SUBLEVELS_CHANGES
+
 # Setting up different levels of difficulty.
-max_number_of_fails = 4
-start_circle_r = 30
-
-big_circle = 90
-medium_circle = 60
-small_circle = 30
-
-levels = [(90, height // 6, start_circle_r, big_circle),
-          (180, height // 6, start_circle_r, big_circle),
-          (0, height // 6, start_circle_r, big_circle),
-          (135, height // 6, start_circle_r, big_circle),
-          (45, height // 6, start_circle_r, big_circle),
-          (270, height // 6, start_circle_r, big_circle),
-          (90, height // 5, start_circle_r, big_circle),
-          (180, height // 5, start_circle_r, big_circle),
-          (0, height // 5, start_circle_r, big_circle),
-          (135, height // 5, start_circle_r, big_circle),
-          (45, height // 5, start_circle_r, big_circle),
-          (270, height // 5, start_circle_r, big_circle),
-          (90, height // 3, start_circle_r, big_circle),
-          (180, height // 3, start_circle_r, big_circle),
-          (0, height // 3, start_circle_r, big_circle),
-          (135, height // 3, start_circle_r, big_circle),
-          (45, height // 3, start_circle_r, big_circle),
-          (270, height // 3, start_circle_r, big_circle),
-          (90, height // 6, start_circle_r, medium_circle),
-          (180, height // 6, start_circle_r, medium_circle),
-          (0, height // 6, start_circle_r, medium_circle),
-          (135, height // 6, start_circle_r, medium_circle),
-          (45, height // 6, start_circle_r, medium_circle),
-          (270, height // 6, start_circle_r, medium_circle),
-          (90, height // 5, start_circle_r, medium_circle),
-          (180, height // 5, start_circle_r, medium_circle),
-          (0, height // 5, start_circle_r, medium_circle),
-          (135, height // 5, start_circle_r, medium_circle),
-          (45, height // 5, start_circle_r, medium_circle),
-          (270, height // 5, start_circle_r, medium_circle),
-          (90, height // 3, start_circle_r, medium_circle),
-          (180, height // 3, start_circle_r, medium_circle),
-          (0, height // 3, start_circle_r, medium_circle),
-          (135, height // 3, start_circle_r, medium_circle),
-          (45, height // 3, start_circle_r, medium_circle),
-          (270, height // 3, start_circle_r, medium_circle),
-          (90, height // 6, start_circle_r, small_circle),
-          (180, height // 6, start_circle_r, small_circle),
-          (0, height // 6, start_circle_r, small_circle),
-          (135, height // 6, start_circle_r, small_circle),
-          (45, height // 6, start_circle_r, small_circle),
-          (270, height // 6, start_circle_r, small_circle),
-          (90, height // 5, start_circle_r, small_circle),
-          (180, height // 5, start_circle_r, small_circle),
-          (0, height // 5, start_circle_r, small_circle),
-          (135, height // 5, start_circle_r, small_circle),
-          (45, height // 5, start_circle_r, small_circle),
-          (270, height // 5, start_circle_r, small_circle),
-          (90, height // 3, start_circle_r, small_circle),
-          (180, height // 3, start_circle_r, small_circle),
-          (0, height // 3, start_circle_r, small_circle),
-          (135, height // 3, start_circle_r, small_circle),
-          (45, height // 3, start_circle_r, small_circle),
-          (270, height // 3, start_circle_r, small_circle)]
-
+max_number_of_fails = MAXIMUM_NUMBER_OF_FAILS
 lvl_index = 0
-course = Course(*levels[lvl_index])
+course = Course(*SUBLEVELS[lvl_index])
 
 # Font parameters and text initialization.
-text_timer = Text('', 0, 0, timer_color)
+text_timer = Text('', 0, 0)
 
 # Start coordinates of MPU6050.
-cursor = Cursor(big_circle_r, cursor_r, cursor_color)
+cursor = Cursor(GAIN_OF_MPU6050) 
 
 # Initialize mesures file.
 path_to_mesures = 'mesures.csv'
-data = DataFile(path_to_mesures)
+#data = DataFile(path_to_mesures)
 
 #Timer
 timer = Timer(timer_length)
@@ -137,10 +137,10 @@ while run:
             if timer.is_over():
                 try:
                     lvl_index += 1
-                    course = Course(*levels[lvl_index])
-                    n_fail = 0
+                    course = Course(*SUBLEVELS[lvl_index])
+                    n_fail = -1
                 except IndexError:
-                    display_congrats(display, bg_color, white)
+                    display_congrats(display, bg_color)
                     run = False
                     break
 
@@ -169,7 +169,7 @@ while run:
         if (n_fail == max_number_of_fails) and (lvl_index != 0):
             lvl_index -= 1
             n_fail = 0
-            course = Course(*levels[lvl_index])
+            course = Course(*SUBLEVELS[lvl_index])
             bg_color = RED
             course.update_colors(RED, RED, RED)
             failed = True
@@ -186,10 +186,11 @@ while run:
     # Get position of the cursor and draw a red circle on it.
     cursor.draw(display)
     data.record_mpu6050_data(cursor)
+
     pygame.display.update()
 
     prev_failed = failed
 
 pygame.quit()
 
-#plot_session_graphs(path_to_mesures)
+plot_session_graphs(path_to_mesures)
