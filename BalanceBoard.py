@@ -1,10 +1,10 @@
-import pygame
+﻿import pygame
 import matplotlib.pyplot as plt
 import numpy as np
 import time
 from pygame import gfxdraw
-from colors import GREEN, ORANGE, RED, BLACK, WHITE
-from mpu6050_interface import MPU6050
+from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE
+#from mpu6050_interface import MPU6050
 
 class Timer:
     def __init__(self, seconds):
@@ -76,7 +76,9 @@ class Polygon:
 
     def draw(self, display):
         pygame.draw.polygon(display, self.color, self.pointlist)
+        pygame.draw.polygon(display, WHITE, self.pointlist, 1)
         pygame.gfxdraw.aapolygon(display,  self.pointlist, WHITE)
+
 
     def update_color(self, new_color):
         self.color = new_color
@@ -171,7 +173,7 @@ class Text:
 
 
 class Cursor:
-    def __init__(self, big_circle_r, cursor_r, color=BLACK):
+    def __init__(self, gain, cursor_r=5, color=BLACK):
 
         self.x_center, self.y_center = get_center_of_display()
         self.x = self.x_center
@@ -179,7 +181,7 @@ class Cursor:
         self.cursor_r = cursor_r
         self.color = color
 
-        self.gain = 6*big_circle_r / 90
+        self.gain = gain
         self.mpu6050 = MPU6050()
 
         x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
@@ -221,7 +223,7 @@ class Cursor:
 
 
 class Mouse:
-    def __init__(self, _, cursor_r, color=BLACK):
+    def __init__(self, gain, cursor_r=5, color=BLACK):
         self.color = color
         self.cursor_r = cursor_r
 
@@ -329,7 +331,7 @@ def plot_session_graphs(path_to_file):
     plt.show()
 
 
-def display_congrats(display, bg_color, text_color):
+def display_congrats(display, bg_color, text_color=WHITE):
     myfont = pygame.font.SysFont('elephant', 70)
     display.fill(bg_color)
     textsurface = myfont.render("Félicitations!", True, text_color)
