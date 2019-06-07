@@ -98,7 +98,7 @@ cursor = Cursor(GAIN_OF_MPU6050)
 
 # Initialize mesures file.
 path_to_mesures = 'mesures.csv'
-#data = DataFile(path_to_mesures)
+data = DataFile(path_to_mesures)
 
 #Timer
 timer = Timer(timer_length)
