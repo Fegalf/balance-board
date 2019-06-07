@@ -1,29 +1,25 @@
 import pygame
-from BalanceBoard import Timer, EmptyCircle, Text, \
-    Cursor, DataFile, plot_session_graphs, display_congrats
+from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats
+from color_scheme import *
+
+################### LEVEL PARAMETERS ###################
+
+BIG_CIRCLE_RADIUS = 150 # in pixels.
+TIME_BETWEEN_DIFFICULTY_CHANGES = 10  # in seconds.
+GAIN_OF_MPU6050 = 10  # arbitrary value (test for other gain values).
+N_DIFFICULTY_LEVELS = 9
+
+########################################################
 
 # Initialize circles radiuses (in pixels).
-cursor_r = 5
-big_circle_r = 150
+big_circle_r = BIG_CIRCLE_RADIUS
 small_circle_r = int(big_circle_r - 0.1*big_circle_r)
 
-# Set time between difficulty changes (defaults = 10 seconds).
-timer_length = 10
+# Set time between difficulty changes (default: 10 seconds).
+timer_length = TIME_BETWEEN_DIFFICULTY_CHANGES
 
 # Number of difficulty levels.
-n_difficulty_levels = 9
-
-# Colors in RGB.
-green = (22, 100, 27)
-orange = (115, 100, 22)
-red = (150, 25, 25)
-black = (0, 0, 0)
-white = (255, 255, 255)
-
-cursor_color = black
-timer_color = white
-big_circle_color = white
-small_circle_color = white
+n_difficulty_levels = N_DIFFICULTY_LEVELS
 
 # Init top window in full screen.
 pygame.init()
@@ -37,16 +33,15 @@ size_x, size_y = pygame.display.get_surface().get_size()
 x_center, y_center = (size_x//2, size_y//2)
 
 # Create circles and start timer.
-big_circle = EmptyCircle(x_center, y_center, big_circle_r, big_circle_color)
-small_circle = EmptyCircle(x_center, y_center, small_circle_r, small_circle_color)
+big_circle = EmptyCircle(x_center, y_center, big_circle_r)
+small_circle = EmptyCircle(x_center, y_center, small_circle_r)
 timer_10s = Timer(timer_length)
 
+# Initialize MPU6050 cursor.
+cursor = Cursor(GAIN_OF_MPU6050)
+
 # Font parameters and text initialization.
-
-text_timer = Text('', 0, 0, timer_color)
-
-# Start coordinates of MPU6050.
-cursor = Cursor(big_circle_r, x_center, y_center, cursor_r, cursor_color)
+text_timer = Text('', 0, 0)
 
 # Initialize mesures file.
 path_to_mesures = 'mesures.csv'
@@ -54,12 +49,13 @@ data = DataFile(path_to_mesures)
 
 # Starting game.
 difficulty = 1
-bg_color = red
+bg_color = RED
 run = True
 while run:
     pygame.mouse.set_visible(False)
     pygame.time.delay(10)
     
+    # Exit game if "escape" or window's "X" are pressed.
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -67,26 +63,29 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 run = False
 
+    # If cursor is outside BIG circle, background is RED.
+    # If cursor in inside between SMALL and BIG circles, background is ORANGE. 
+    # If cursor in inside SMALL circle, background is GREEN and timer starts.
     if big_circle.cursor_is_inside(cursor):
         if not small_circle.cursor_is_inside(cursor):
-            bg_color = orange
+            bg_color = ORANGE
             timer_10s.reset()
             text_timer.hide()
 
         else:
-            bg_color = green
+            bg_color = GREEN
             remaining_time = str(timer_10s.get_remaining_time())
             text_timer.change_text(remaining_time)
 
     else:
-        bg_color = red
+        bg_color = RED
         timer_10s.reset()
         text_timer.hide()
 
     if timer_10s.is_over():
         difficulty += 1
         if difficulty == n_difficulty_levels:
-            display_congrats(display, bg_color, white)
+            display_congrats(display, bg_color, WHITE)
             run = False
             break
         new_radius = small_circle_r - int((difficulty / 10) * big_circle_r)
@@ -98,15 +97,17 @@ while run:
     big_circle.draw(display)
     small_circle.draw(display)
 
-    # Draw text.
+    # Draw timer.
     text_timer.draw(display, x_center - 30, 75)
 
-    # Get position of the cursor and draw a red circle on it.
+    # Draw cursor.
     cursor.draw(display)
     
+    # Record data. 
     data.record_mpu6050_data(cursor)
-    pygame.display.update()
-    
+
+    pygame.display.update()    
 pygame.quit()
 
+# Plots of various measures.
 plot_session_graphs(path_to_mesures)
