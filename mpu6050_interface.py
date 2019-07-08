@@ -41,5 +41,5 @@ class MPU6050:
             gyro_y = -((65535 - gyro_y) + 1)
         gyro_y = gyro_y / 131.0
 
-        return x_rot, y_rot, acc_z, gyro_x, gyro_y
+        return -x_rot, y_rot, acc_z, -gyro_x, gyro_y
 

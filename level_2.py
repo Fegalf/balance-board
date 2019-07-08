@@ -92,6 +92,8 @@ course = Course(*SUBLEVELS[lvl_index])
 
 # Font parameters and text initialization.
 text_timer = Text('', 0, 0)
+text_lvl = Text('', 0, 0)
+text_lvl.change_text(str(lvl_index))
 
 # Start coordinates of MPU6050.
 cursor = Cursor(GAIN_OF_MPU6050) 
@@ -139,6 +141,7 @@ while run:
                     lvl_index += 1
                     course = Course(*SUBLEVELS[lvl_index])
                     n_fail = -1
+                    text_lvl.change_text(str(lvl_index))
                 except IndexError:
                     display_congrats(display, bg_color)
                     run = False
@@ -175,6 +178,7 @@ while run:
             failed = True
             timer.reset()
             text_timer.hide()
+            text_lvl.change_text(str(lvl_index))
 
     # Draw background and circles.
     display.fill(bg_color)
@@ -182,10 +186,11 @@ while run:
 
     # Draw text.
     text_timer.draw(display, 100, 75)
+    text_lvl.draw(display, 25, height-70)
 
     # Get position of the cursor and draw a red circle on it.
     cursor.draw(display)
-    data.record_mpu6050_data(cursor)
+    data.record_mpu6050_data(cursor,lvl_index)
 
     pygame.display.update()
 

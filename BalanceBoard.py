@@ -1,4 +1,4 @@
-﻿import pygame
+import pygame
 import matplotlib.pyplot as plt
 import numpy as np
 import time
@@ -28,7 +28,7 @@ class EmptyCircle:
         self.x = x
         self.y = y
         self.R = radius
-        self.color = WHITE
+        self.color = BLACK
 
     def cursor_is_inside(self, cursor):
         # Get mouse position.
@@ -42,9 +42,9 @@ class EmptyCircle:
     def draw(self, display):
         # Anti alisied circles (might break in futur pygame update)
         # If so, just replace these 2 lines by:
-        #pygame.draw.circle(display, self.color, (self.x, self.y), self.R, 2)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R, self.color)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-1, self.color)
+        pygame.draw.circle(display, self.color, (self.x, self.y), self.R, 6)
+        #pygame.gfxdraw.aacircle(display, self.x, self.y, self.R, self.color)
+        #pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-1, self.color)
 
     def update_radius(self, new_radius):
         self.R = new_radius
@@ -57,8 +57,8 @@ class FilledCircle(EmptyCircle):
 
     def draw(self, display):
         pygame.gfxdraw.filled_circle(display, self.x, self.y, self.R, self.color)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R, WHITE)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-1, WHITE)
+        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R, BLACK)
+        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-1, BLACK)
 
     def update_color(self, new_color):
         self.color = new_color
@@ -173,7 +173,7 @@ class Text:
 
 
 class Cursor:
-    def __init__(self, gain, cursor_r=5, color=BLACK):
+    def __init__(self, gain, cursor_r=5, color=WHITE):
 
         self.x_center, self.y_center = get_center_of_display()
         self.x = self.x_center
@@ -192,8 +192,8 @@ class Cursor:
         self.gyro_total_x = self.angle_x_filtre - self.gyro_offset_x
         self.gyro_total_y = self.angle_y_filtre - self.gyro_offset_y
 
-        self.dt = 0.01
-        self.K = 0.945
+        self.dt = 0.023
+        self.K = 0.97  # etait 0.945
         self.K1 = 1 - self.K
 
     def update_position(self,):
@@ -211,19 +211,20 @@ class Cursor:
         self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation)
         
         # Updating pixel values and averaging with previous value (smoother).
-        self.x = int((self.x + self.x_center + self.gain * self.angle_x_filtre)//2)
-        self.y = int((self.y + self.y_center + self.gain * self.angle_y_filtre)//2)
+        #self.x = int((self.x + self.x_center + self.gain * self.angle_x_filtre)//2)
+        #self.y = int((self.y + self.y_center + self.gain * self.angle_y_filtre)//2)
+        self.x = int(self.x_center + self.gain * self.angle_x_filtre)
+        self.y = int(self.y_center + self.gain * self.angle_y_filtre)
         
     def draw(self, display):
         pygame.draw.circle(display, self.color, self.get_position(), self.cursor_r)
         
     def get_position(self,):
-        self.update_position()
         return self.x, self.y
 
 
 class Mouse:
-    def __init__(self, gain, cursor_r=5, color=BLACK):
+    def __init__(self, gain, cursor_r=5, color=WHITE):
         self.color = color
         self.cursor_r = cursor_r
 
@@ -238,10 +239,10 @@ class Mouse:
 class DataFile:
     def __init__(self, path_to_csv_file):
         self.f = open(path_to_csv_file, 'w')
-        self.t0 = time.time()
+        #self.t0 = time.time()
     
         self.f.write("{0:}, {1:}, {2:}, {3:}, {4:}, "
-                     "{5:}, {6:}\n".format('time',
+                     "{5:}, {6:}, {7:}\n".format('time', 'niveau',
                                                    'x_rotation',
                                                    'y_rotation',
                                                    'gyro_total_x',
@@ -252,10 +253,11 @@ class DataFile:
     def __exit__(self,):
         self.f.close()
         
-    def record_mpu6050_data(self, cursor):
-        t = time.time() - self.t0
+    def record_mpu6050_data(self, t, cursor, niveau):
+        #t = time.time() - self.t0
         self.f.write("{0:10f}, {1:4.1f}, {2:4.1f}, {3:4.1f}, {4:4.1f}, "
-                      "{5:4.1f}, {6:4.1f}\n".format(t, cursor.x_rotation,
+                      "{5:4.1f}, {6:4.1f}, {7:4.1f}\n".format(t, niveau,
+                                                    cursor.x_rotation,
                                                     cursor.y_rotation,
                                                     cursor.gyro_total_x,
                                                     cursor.gyro_total_y,
@@ -268,7 +270,8 @@ def get_center_of_display():
 
 def plot_session_graphs(path_to_file):
     fichierData = open(path_to_file, 'r')
-    time = []
+    temps = []
+    niveau = []
     angleX = []
     angleY = []
     accX = []
@@ -280,20 +283,21 @@ def plot_session_graphs(path_to_file):
     next(fichierData)
     
     for x in fichierData:
-      ledata = [float(y) for y in x.split(', ')]
-      time.append(ledata[0])
-      accX.append(ledata[1])
-      accY.append(ledata[2])
-      gyroX.append(ledata[3])
-      gyroY.append(ledata[4])
-      angleX.append(ledata[5])
-      angleY.append(ledata[6])
+        ledata = [float(y) for y in x.split(', ')]
+        temps.append(ledata[0])
+        niveau.append(ledata[1])
+        accX.append(ledata[2])
+        accY.append(ledata[3])
+        gyroX.append(ledata[4])
+        gyroY.append(ledata[5])
+        angleX.append(ledata[6])
+        angleY.append(ledata[7])
 
     fichierData.close()
 
     plt.figure(1)  
     plt.subplot(221)
-    plt.plot(time, angleX)
+    plt.plot(temps, angleX)
     plt.xlabel('time [sec]')
     plt.ylabel('angle X [deg]')
     plt.grid(True)
@@ -304,7 +308,7 @@ def plot_session_graphs(path_to_file):
     #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
     plt.grid(True)
     plt.subplot(223)
-    plt.plot(time,angleY)
+    plt.plot(temps,angleY)
     plt.xlabel('time [sec]')
     plt.ylabel('angle Y [deg]')
     plt.grid(True)
@@ -318,13 +322,13 @@ def plot_session_graphs(path_to_file):
 
     plt.figure(2)
     plt.subplot(211)
-    plt.plot(time, angleX, time, gyroX, time, accX)
+    plt.plot(temps, angleX, temps, gyroX, temps, accX)
     plt.xlabel('time [sec]')
     plt.ylabel('angle X [deg]')
     plt.grid(True)
     plt.title('Les angles')
     plt.subplot(212)
-    plt.plot(time, angleY, time, gyroY, time, accY)
+    plt.plot(temps, angleY, temps, gyroY, temps, accY)
     plt.xlabel('time [sec]')
     plt.ylabel('angle Y [deg]')
     plt.grid(True)

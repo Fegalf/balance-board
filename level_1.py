@@ -1,5 +1,5 @@
 import pygame
-from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats
+from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats, time
 from color_scheme import *
 
 ################### LEVEL PARAMETERS ###################
@@ -24,6 +24,7 @@ n_difficulty_levels = N_DIFFICULTY_LEVELS
 # Init top window in full screen.
 pygame.init()
 display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+#display = pygame.display.set_mode([400, 400])
 pygame.display.set_caption("Balance Board")
 
 # Get width and height of display.
@@ -38,7 +39,7 @@ small_circle = EmptyCircle(x_center, y_center, small_circle_r)
 timer_10s = Timer(timer_length)
 
 # Initialize MPU6050 cursor.
-cursor = Cursor(GAIN_OF_MPU6050)
+cursor = Cursor(GAIN_OF_MPU6050,cursor_r=7)
 
 # Font parameters and text initialization.
 text_timer = Text('', 0, 0)
@@ -47,17 +48,22 @@ text_timer = Text('', 0, 0)
 path_to_mesures = 'mesures.csv'
 data = DataFile(path_to_mesures)
 
+t0 = time.time()
+dt = 0.023    # à vérifier quelle est la fréquence d'échantillonage
+next_t = dt
+
 # Starting game.
 difficulty = 1
 bg_color = RED
 run = True
 while run:
     pygame.mouse.set_visible(False)
-    pygame.time.delay(10)
-    
+    #pygame.time.delay(10)
+    t = time.time()-t0
+    cursor.update_position()
     # Exit game if "escape" or window's "X" are pressed.
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:  # peu peut-etre etre enlevé
             run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -104,9 +110,15 @@ while run:
     cursor.draw(display)
     
     # Record data. 
-    data.record_mpu6050_data(cursor)
+    data.record_mpu6050_data(t, cursor, difficulty)
 
-    pygame.display.update()    
+    pygame.display.update()
+    
+    next_t = next_t + dt
+    pause = next_t-(time.time()-t0)
+    if (pause>0):
+        time.sleep(pause)
+    
 pygame.quit()
 
 # Plots of various measures.
