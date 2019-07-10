@@ -11,6 +11,8 @@ class BalanceBoardGame(tk.Frame):
         self.mw.resizable(0, 0)
         self.create_widgets()
 
+    def __ex
+
     def create_widgets(self):
         label_participant = tk.Label(self.mw, text="Participant :")
         label_participant.place(x=20, y=18)
@@ -81,3 +83,4 @@ class BalanceBoardGame(tk.Frame):
 root = tk.Tk()
 bbg = BalanceBoardGame(root)
 bbg.mainloop()
+pygame.quit()
