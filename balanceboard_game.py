@@ -42,9 +42,12 @@ class BalanceBoardGame(tk.Frame):
 
     def run_calibration(self):
         self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
+        self.activate_widget(self.button_g0)
+        self.activate_widget(self.button_g1)
+        self.activate_widget(self.button_g2)
 
     def run_game_0(self):
-        pass
+        os.system('level_1.py')
 
     def run_game_1(self):
         pass

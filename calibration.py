@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats, time
+from BalanceBoard import Text, time
 from mpu6050_interface import MPU6050
 from graphics import *
 import numpy as np
@@ -57,9 +57,6 @@ def run_calibration():
     #cir.setWidth(2)
     cir.draw(win)
 
-    #label = Text(Point(100, 120), 'Du texte')
-    #label.draw(win)
-
     message = Text(Point(win.getWidth()/2, 10), "Laisser immobile le dispositif pendant au moins 4 secondes.")
     message.draw(win)
     #win.getMouse()
@@ -68,11 +65,6 @@ def run_calibration():
     mpu6050 = MPU6050()
 
     x_rotation, y_rotation,accel_zout,x_gyro,y_gyro = mpu6050.read_data()
-
-    print("Avant tout: X={0:4.1f} deg, Y={1:4.1f} deg, z={2:4.1f} g, gyro_X={3:4.1f}, gyro_Y={4:4.1f}".format(x_rotation, y_rotation,accel_zout,x_gyro,y_gyro))
-
-    print("---------------------")
-
     gyro_offset_x, gyro_offset_y = mesure_offset_gyro();
 
     # Coordonnées de départ au centre
@@ -129,8 +121,4 @@ def run_calibration():
     rotation_offset_x = accumul_x / nb_mesures
     rotation_offset_y = accumul_y / nb_mesures
 
-    print("Calibration: X_offset={0:4.1f} deg, Y_offset={1:4.1f} deg, gyro_X_offset={2:4.1f}, gyro_Y_offset={3:4.1f}".format(rotation_offset_x, 
-                                                                                                                         rotation_offset_y,
-                                                                                                                         gyro_offset_x, 
-                                                                                                                         gyro_offset_y))
     return rotation_offset_x, rotation_offset_y, gyro_offset_x, gyro_offset_y
