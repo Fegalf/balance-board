@@ -47,10 +47,12 @@ class BalanceBoardGame(tk.Frame):
         self.activate_widget(self.button_g2)
 
     def run_game_0(self):
-        exec(open("level_1.py").read())
+        from level_1 import level_1
+        level_1()
 
     def run_game_1(self):
-        pass
+        from level_1 import level_1
+        level_1()
 
     def run_game_2(self):
         pass
