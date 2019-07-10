@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import pygame
@@ -62,7 +61,7 @@ run = True
 while run:
     pygame.mouse.set_visible(False)
     #pygame.time.delay(10)
-    t = time.time()-t0
+    t = time.time() - t0
     cursor.update_position()
     # Exit game if "escape" or window's "X" are pressed.
     for event in pygame.event.get():
@@ -118,7 +117,7 @@ while run:
     pygame.display.update()
     
     next_t = next_t + dt
-    pause = next_t-(time.time()-t0)
+    pause = next_t - (time.time()-t0)
     if (pause>0):
         time.sleep(pause)
     

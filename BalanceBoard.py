@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import pygame
@@ -257,7 +256,6 @@ class DataFile:
         self.f.close()
         
     def record_mpu6050_data(self, t, cursor, niveau):
-        #t = time.time() - self.t0
         self.f.write("{0:10f}, {1:4.1f}, {2:4.1f}, {3:4.1f}, {4:4.1f}, "
                       "{5:4.1f}, {6:4.1f}, {7:4.1f}\n".format(t, niveau,
                                                     cursor.x_rotation,
