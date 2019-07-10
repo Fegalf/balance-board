@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import pygame
 import math
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE

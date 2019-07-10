@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import pygame
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats, time
 from color_scheme import *
@@ -49,7 +52,7 @@ path_to_mesures = 'mesures.csv'
 data = DataFile(path_to_mesures)
 
 t0 = time.time()
-dt = 0.023    # à vérifier quelle est la fréquence d'échantillonage
+dt = 0.023    # a verifier quelle est la frequence d'echantillonage
 next_t = dt
 
 # Starting game.
