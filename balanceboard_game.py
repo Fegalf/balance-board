@@ -47,7 +47,7 @@ class BalanceBoardGame(tk.Frame):
         self.activate_widget(self.button_g2)
 
     def run_game_0(self):
-        os.system('level_1.py')
+        exec(open("./level_1.py").read())
 
     def run_game_1(self):
         pass
@@ -60,6 +60,7 @@ class BalanceBoardGame(tk.Frame):
         if  self.entry.get() != '':
             self.path_to_data = os.path.join(os.getcwd(), 'Data', self.entry.get())
             self.disable_widget(self.entry)
+            self.disable_widget(self.button_save_participant)
             self.activate_widget(self.button_calibration)
             try:
                 os.mkdir(self.path_to_data)
