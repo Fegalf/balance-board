@@ -7,7 +7,7 @@ import math
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
                          plot_session_graphs, display_congrats, \
-                         point_inside_polygon, Mouse, Course
+                         point_inside_polygon, Course
 
 # Init top window in full screen.
 pygame.init()
