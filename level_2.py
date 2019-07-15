@@ -29,60 +29,60 @@ GAIN_OF_MPU6050 = 10  # Gain values should be calibrated using the balance board
 MAXIMUM_NUMBER_OF_FAILS = 3
 
 # Each line represents a sublevel's angle, distance from the screen's center, radius of starting circle and radius of end circle.
-SUBLEVELS = [(90, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (180, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (0, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (135, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (45, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (270, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (90, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (180, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (0, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (135, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (45, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (270, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (90, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (180, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (0, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (135, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (45, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (270, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_easy),
-          (90, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (180, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (0, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (135, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (45, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (270, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (90, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (180, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (0, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (135, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (45, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (270, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (90, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (180, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (0, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (135, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (45, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (270, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_medium),
-          (90, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (180, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (0, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (135, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (45, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (270, height // 6, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (90, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (180, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (0, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (135, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (45, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (270, height // 5, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (90, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (180, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (0, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (135, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (45, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard),
-          (270, height // 3, START_CIRCLE_RADIUS, END_CIRCLE_RADIUS_hard)]
+SUBLEVELS = [(90, height // 6, START_CIRCLE_RADIUS),
+          (180, height // 6, START_CIRCLE_RADIUS),
+          (0, height // 6, START_CIRCLE_RADIUS),
+          (135, height // 6, START_CIRCLE_RADIUS),
+          (45, height // 6, START_CIRCLE_RADIUS),
+          (270, height // 6, START_CIRCLE_RADIUS),
+          (90, height // 5, START_CIRCLE_RADIUS),
+          (180, height // 5, START_CIRCLE_RADIUS),
+          (0, height // 5, START_CIRCLE_RADIUS),
+          (135, height // 5, START_CIRCLE_RADIUS),
+          (45, height // 5, START_CIRCLE_RADIUS),
+          (270, height // 5, START_CIRCLE_RADIUS,),
+          (90, height // 3, START_CIRCLE_RADIUS,),
+          (180, height // 3, START_CIRCLE_RADIUS,),
+          (0, height // 3, START_CIRCLE_RADIUS, ),
+          (135, height // 3, START_CIRCLE_RADIUS, ),
+          (45, height // 3, START_CIRCLE_RADIUS, ),
+          (270, height // 3, START_CIRCLE_RADIUS, ),
+          (90, height // 6, START_CIRCLE_RADIUS, ),
+          (180, height // 6, START_CIRCLE_RADIUS, ),
+          (0, height // 6, START_CIRCLE_RADIUS, ),
+          (135, height // 6, START_CIRCLE_RADIUS, ),
+          (45, height // 6, START_CIRCLE_RADIUS, ),
+          (270, height // 6, START_CIRCLE_RADIUS, ),
+          (90, height // 5, START_CIRCLE_RADIUS, ),
+          (180, height // 5, START_CIRCLE_RADIUS, ),
+          (0, height // 5, START_CIRCLE_RADIUS, ),
+          (135, height // 5, START_CIRCLE_RADIUS, ),
+          (45, height // 5, START_CIRCLE_RADIUS, ),
+          (270, height // 5, START_CIRCLE_RADIUS, ),
+          (90, height // 3, START_CIRCLE_RADIUS, ),
+          (180, height // 3, START_CIRCLE_RADIUS, ),
+          (0, height // 3, START_CIRCLE_RADIUS, ),
+          (135, height // 3, START_CIRCLE_RADIUS, ),
+          (45, height // 3, START_CIRCLE_RADIUS, ),
+          (270, height // 3, START_CIRCLE_RADIUS, ),
+          (90, height // 6, START_CIRCLE_RADIUS, ),
+          (180, height // 6, START_CIRCLE_RADIUS, ),
+          (0, height // 6, START_CIRCLE_RADIUS, ),
+          (135, height // 6, START_CIRCLE_RADIUS, ),
+          (45, height // 6, START_CIRCLE_RADIUS, ),
+          (270, height // 6, START_CIRCLE_RADIUS, ),
+          (90, height // 5, START_CIRCLE_RADIUS, ),
+          (180, height // 5, START_CIRCLE_RADIUS, ),
+          (0, height // 5, START_CIRCLE_RADIUS, ),
+          (135, height // 5, START_CIRCLE_RADIUS, ),
+          (45, height // 5, START_CIRCLE_RADIUS, ),
+          (270, height // 5, START_CIRCLE_RADIUS, ),
+          (90, height // 3, START_CIRCLE_RADIUS, ),
+          (180, height // 3, START_CIRCLE_RADIUS, ),
+          (0, height // 3, START_CIRCLE_RADIUS, ),
+          (135, height // 3, START_CIRCLE_RADIUS,),
+          (45, height // 3, START_CIRCLE_RADIUS, ),
+          (270, height // 3, START_CIRCLE_RADIUS, )]
 
 ###################################################################################
 
@@ -126,6 +126,7 @@ while run:
     pygame.mouse.set_visible(False)
     t = time.time() - t0
     cursor.update_position()
+    y_pos = cursor.get_position()[1]
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -133,8 +134,7 @@ while run:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 run = False
-
-    y_pos = cursor.get_position()[1]
+    
     if y_pos > distance_reached:
         distance_reached = y_pos
         
@@ -143,7 +143,9 @@ while run:
     text_lvl.draw(display, 25, height-70)
 
     # Get position of the cursor and draw a red circle on it.
+    display.fill(bg_color)
     cursor.draw(display)
+    course.draw(display)
     pygame.display.update()
 
     next_t = next_t + dt
