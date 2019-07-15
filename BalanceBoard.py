@@ -31,7 +31,7 @@ class Line:
         self.color = color
 
     def draw(self, display):
-        pygame.draw.line(display, self.color, self.start_xy, self.end_xy, width=2)
+        pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 2)
         pygame.draw.circle(display, self.color, self.end_xy, 4)
 
 
