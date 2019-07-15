@@ -102,7 +102,6 @@ text_lvl.change_text(str(lvl_index))
 # Start coordinates of MPU6050.
 cursor = Cursor(GAIN_OF_MPU6050) 
 
-
 # Initialize mesures file.
 path_to_mesures = 'mesures.csv'
 data = DataFile(path_to_mesures)
@@ -135,21 +134,10 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 run = False
 
-    if course.cursor_inside_start_circle(cursor):
-        bg_color = ORANGE
-        course.update_colors(ORANGE, ORANGE, ORANGE)
-        failed = False
-        timer.reset()
-        text_timer.hide()
-    
     y_pos = cursor.get_position()[1]
     if y_pos > distance_reached:
         distance_reached = y_pos
-
-    # Draw background and circles.
-    
-    course.draw(display)
-
+        
     # Draw text.
     text_timer.draw(display, 100, 75)
     text_lvl.draw(display, 25, height-70)
