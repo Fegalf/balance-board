@@ -31,7 +31,7 @@ class Line:
         self.color = color
 
     def draw(self, display):
-        pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 2)
+        pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
         pygame.draw.circle(display, self.color, self.end_xy, 4)
 
 
@@ -119,9 +119,9 @@ class Course:
         return self.start_circle.cursor_is_inside(cursor)
 
     def draw(self, display):
-        self.start_circle.draw(display)
         self.line.draw(display)
-
+        self.start_circle.draw(display)
+        
     def update_colors(self, start_circle_color):
         self.start_circle.update_color(start_circle_color)
 

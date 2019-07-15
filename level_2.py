@@ -113,7 +113,7 @@ timer = Timer(timer_length)
 n_fail = 0
 prev_failed = False
 failed = False
-bg_color = GREEN
+bg_color = ORANGE
 run = True
 distance_reached = 0 
 
@@ -137,13 +137,17 @@ while run:
     
     if y_pos > distance_reached:
         distance_reached = y_pos
-        
+    
+    if not course.cursor_inside_start_circle(cursor):
+        bg_color = GREEN
+        course.update_colors(bg_color)
+
     # Draw text.
     text_timer.draw(display, 100, 75)
     text_lvl.draw(display, 25, height-70)
 
     # Get position of the cursor and draw a red circle on it.
-    display.fill(bg_color)
+    #display.fill(bg_color)
     cursor.draw(display)
     course.draw(display)
     pygame.display.update()
