@@ -110,10 +110,8 @@ while run:
 
     # Draw cursor.
     cursor.draw(display)
-    
-    # Record data. 
-    data.record_mpu6050_data(t, cursor, difficulty)
 
+    # Update screen.
     pygame.display.update()
     
     next_t = next_t + dt
@@ -121,6 +119,8 @@ while run:
     if (pause>0):
         time.sleep(pause)
     
+    # Record data. 
+    data.record_mpu6050_data(t, cursor, difficulty)
 pygame.quit()
 
 # Plots of various measures.

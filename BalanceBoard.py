@@ -225,19 +225,6 @@ class Cursor:
         return self.x, self.y
 
 
-class Mouse:
-    def __init__(self, gain, cursor_r=5, color=WHITE):
-        self.color = color
-        self.cursor_r = cursor_r
-
-    def draw(self, display):
-        pygame.draw.circle(display, self.color, self.get_position(), self.cursor_r)
-
-    def get_position(self,):
-        x, y = pygame.mouse.get_pos()
-        return x, y
-
-
 class DataFile:
     def __init__(self, path_to_csv_file):
         self.f = open(path_to_csv_file, 'w')
