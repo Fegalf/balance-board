@@ -24,7 +24,7 @@ class Timer:
     def get_remaining_time(self):
         return (self.t_end - pygame.time.get_ticks()) // 1000 + 1
 
-class Line:
+class DistanceLine:
     def __init__(self, start_xy, end_xy, color):
         self.start_xy = start_xy
         self.end_xy = end_xy
@@ -32,7 +32,7 @@ class Line:
 
     def draw(self, display):
         pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
-        pygame.draw.circle(display, self.color, self.end_xy, 4)
+        pygame.draw.circle(display, self.color, self.end_xy, 6)
 
 
 class EmptyCircle:
@@ -113,7 +113,7 @@ class Course:
         self.y_end = int(self.y_start + length * np.sin(self.angle_in_rads))
 
         self.start_circle = FilledCircle(self.x_start, self.y_start, start_circle_r, self.start_circle_color)
-        self.line = Line((self.x_start, self.y_start), (self.x_end, self.y_end), WHITE)
+        self.line = DistanceLine((self.x_start, self.y_start), (self.x_end, self.y_end), WHITE)
 
     def cursor_inside_start_circle(self, cursor):
         return self.start_circle.cursor_is_inside(cursor)
