@@ -148,8 +148,8 @@ while run:
 
     # Get position of the cursor and draw a red circle on it.
     #display.fill(bg_color)
-    cursor.draw(display)
     course.draw(display)
+    cursor.draw(display)
     pygame.display.update()
 
     next_t = next_t + dt
