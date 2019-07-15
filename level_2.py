@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pygame
+import time
 import math
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
@@ -101,6 +102,7 @@ text_lvl.change_text(str(lvl_index))
 # Start coordinates of MPU6050.
 cursor = Cursor(GAIN_OF_MPU6050) 
 
+
 # Initialize mesures file.
 path_to_mesures = 'mesures.csv'
 data = DataFile(path_to_mesures)
@@ -112,11 +114,19 @@ timer = Timer(timer_length)
 n_fail = 0
 prev_failed = False
 failed = False
-bg_color = RED
+bg_color = GREEN
 run = True
+distance_reached = 0 
+
+t0 = time.time()
+dt = 0.023    # a verifier quelle est la frequence d'echantillonage
+next_t = dt
+display.fill(bg_color)
+
 while run:
     pygame.mouse.set_visible(False)
-    pygame.time.delay(10)
+    t = time.time() - t0
+    cursor.update_position()
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -131,60 +141,13 @@ while run:
         failed = False
         timer.reset()
         text_timer.hide()
-
-    if not failed:
-        if course.cursor_inside_end_circle(cursor):
-            bg_color = GREEN
-            course.update_colors(GREEN, GREEN, GREEN)
-            remaining_time = str(timer.get_remaining_time())
-            text_timer.change_text(remaining_time)
-
-            if timer.is_over():
-                try:
-                    lvl_index += 1
-                    course = Course(*SUBLEVELS[lvl_index])
-                    n_fail = -1
-                    text_lvl.change_text(str(lvl_index))
-                except IndexError:
-                    display_congrats(display, bg_color)
-                    run = False
-                    break
-
-                timer.reset()
-                text_timer.hide()
-
-        elif course.cursor_inside_trail(cursor) or course.cursor_inside_start_circle(cursor):
-            bg_color = ORANGE
-            course.update_colors(ORANGE, ORANGE, ORANGE)
-            timer.reset()
-            text_timer.hide()
-
-        else:
-            bg_color = RED
-            course.update_colors(RED, RED, RED)
-            failed = True
-
-            timer.reset()
-            text_timer.hide()
-
-    if failed:
-        if not prev_failed:
-            if lvl_index != 0:
-                n_fail += 1
-
-        if (n_fail == max_number_of_fails) and (lvl_index != 0):
-            lvl_index -= 1
-            n_fail = 0
-            course = Course(*SUBLEVELS[lvl_index])
-            bg_color = RED
-            course.update_colors(RED, RED, RED)
-            failed = True
-            timer.reset()
-            text_timer.hide()
-            text_lvl.change_text(str(lvl_index))
+    
+    y_pos = cursor.get_position()[1]
+    if y_pos > distance_reached:
+        distance_reached = y_pos
 
     # Draw background and circles.
-    display.fill(bg_color)
+    
     course.draw(display)
 
     # Draw text.
@@ -193,11 +156,13 @@ while run:
 
     # Get position of the cursor and draw a red circle on it.
     cursor.draw(display)
-    data.record_mpu6050_data(cursor, lvl_index)
-
     pygame.display.update()
 
-    prev_failed = failed
+    next_t = next_t + dt
+    pause = next_t - (time.time() - t0)
+    if (pause>0):
+        time.sleep(pause)
+    data.record_mpu6050_data(t, cursor, lvl_index)
 
 pygame.quit()
 
