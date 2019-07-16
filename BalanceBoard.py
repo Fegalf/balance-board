@@ -142,7 +142,7 @@ class Course:
         self.y_end = int(self.y_start + self.distance * np.sin(self.angle_in_rads))
 
         self.start_circle = FilledCircle(self.x_start, self.y_start, start_circle_r, self.start_circle_color)
-        self.line = DistanceLine((self.x_start, self.y_start), (self.x_end, self.y_end), BLACK)
+        self.line = DistanceLine(self.distance, self.angle_in_rads, self.x_end, self.y_end, BLACK)
 
     def cursor_inside_start_circle(self, cursor):
         return self.start_circle.cursor_is_inside(cursor)
