@@ -28,8 +28,8 @@ class DistanceLine:
     def __init__(self, distance, angle, x_center, y_center, color):
         #TODO: REPLACE CIRCLE BY TRIANGLE 
         # angle in radians.
-        self.distance
-        self.angle
+        self.distance = distance
+        self.angle = angle 
         self.start_xy = (x_center, y_center)
         self.end_xy = self.compute_line_end_xy()
         self.color = color
