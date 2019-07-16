@@ -89,9 +89,11 @@ while run:
         bg_color = GREEN
         remaining_time = str(timer.get_remaining_time())
         text_timer.change_text(remaining_time)
+        course.update_colors(bg_color)
 
     else:
         bg_color = ORANGE
+        course.update_colors(bg_color)
         timer.reset()
         text_timer.hide()
 
@@ -116,7 +118,7 @@ while run:
     text_lvl.draw(display, 25, height-70)
 
     # Get position of the cursor and draw a red circle on it.
-    #display.fill(bg_color)
+    display.fill(bg_color)
     course.draw(display)
     cursor.draw(display)
     pygame.display.update()
