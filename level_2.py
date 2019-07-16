@@ -75,7 +75,7 @@ while run:
     cursor.update_position()
     y_pos = cursor.get_position()[1]
 
-    if y_pos > distance_reached:
+    if y_pos > max_distance_reached:
         max_distance_reached = y_pos
 
     for event in pygame.event.get():
