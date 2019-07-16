@@ -25,16 +25,48 @@ class Timer:
         return (self.t_end - pygame.time.get_ticks()) // 1000 + 1
 
 class DistanceLine:
-    def __init__(self, start_xy, end_xy, color):
-        self.start_xy = start_xy
-        self.end_xy = end_xy
+    def __init__(self, distance, angle, x_center, y_center, color):
+        #TODO: REPLACE CIRCLE BY TRIANGLE 
+        # angle in radians.
+        self.distance
+        self.angle
+        self.start_xy = (x_center, y_center)
+        self.end_xy = self.compute_line_end_xy()
         self.color = color
+
+    def compute_line_end_xy(self):
+        sin = np.sin(self.angle)
+        cos = np.cos(self.angle)
+        end_x = self.start_xy[0] + cos * self.distance
+        end_y = self.start_xy[1] - sin * self.distance
+        return end_x, end_y
+
+    def _compute_polygon_points(self, x_center, y_center):
+        points = []
+
+        sin = np.sin(self.angle)
+        cos = np.cos(self.angle)
+        sin0 = np.sin(self.angle - np.pi/2)
+        cos0 = np.cos(self.angle - np.pi/2)
+
+        p0_x = int(x_center + self.distance * cos0)
+        p0_y = int(y_center + self.distance * sin0)
+        points.append((p0_x, p0_y))
+
+        p1_x = int(x_center - self.distance * cos0)
+        p1_y = int(y_center - self.distance * sin0)
+        points.append((p1_x, p1_y))
+
+        p2_x = int(x_center + self.distance * cos - self.distance * sin)
+        p2_y = int(y_center + self.distance * sin + self.distance * cos)
+        points.append((p2_x, p2_y))
+
+        return points
 
     def draw(self, display):
         pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
         pygame.draw.circle(display, self.color, self.end_xy, 6)
-
-
+ 
 class EmptyCircle:
     def __init__(self, x, y, radius):
         self.x = x
@@ -91,26 +123,23 @@ class Polygon:
         pygame.draw.polygon(display, WHITE, self.pointlist, 1)
         pygame.gfxdraw.aapolygon(display,  self.pointlist, WHITE)
 
-
     def update_color(self, new_color):
         self.color = new_color
 
 
 class Course:
-    def __init__(self, angle_in_degrees, length,
-                 start_circle_r, duration_in_seconds=5,
-                 start_circle_color=ORANGE):
+    def __init__(self, angle_in_degrees, start_circle_r, distance=0,
+                 duration_in_seconds=5, start_circle_color=ORANGE):
 
         self.x_start, self.y_start = get_center_of_display()
-        self.length = length
+        self.distance = distance
         self.timer = Timer(duration_in_seconds)
         self.angle_in_rads = np.radians(-angle_in_degrees)
 
         # colors
         self.start_circle_color = start_circle_color
-
-        self.x_end = int(self.x_start + length * np.cos(self.angle_in_rads))
-        self.y_end = int(self.y_start + length * np.sin(self.angle_in_rads))
+        self.x_end = int(self.x_start + self.distance * np.cos(self.angle_in_rads))
+        self.y_end = int(self.y_start + self.distance * np.sin(self.angle_in_rads))
 
         self.start_circle = FilledCircle(self.x_start, self.y_start, start_circle_r, self.start_circle_color)
         self.line = DistanceLine((self.x_start, self.y_start), (self.x_end, self.y_end), BLACK)
@@ -121,7 +150,7 @@ class Course:
     def draw(self, display):
         self.line.draw(display)
         self.start_circle.draw(display)
-        
+
     def update_colors(self, start_circle_color):
         self.start_circle.update_color(start_circle_color)
 

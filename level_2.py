@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import pygame
@@ -20,69 +19,18 @@ height = pygame.display.get_surface().get_size()[1]
 ############################## LEVELS PARAMETERS ##############################
 
 START_CIRCLE_RADIUS = 30
-END_CIRCLE_RADIUS_easy = 90
-END_CIRCLE_RADIUS_medium = 60
-END_CIRCLE_RADIUS_hard = 30
+TIME_BETWEEN_SUBLEVELS_CHANGES = 5
 
-TIME_BETWEEN_SUBLEVELS_CHANGES = 3
 GAIN_OF_MPU6050 = 10  # Gain values should be calibrated using the balance board (trials and errors).
-MAXIMUM_NUMBER_OF_FAILS = 3
+NUMBER_OF_TRIAL = 3
 
 # Each line represents a sublevel's angle, distance from the screen's center, radius of starting circle and radius of end circle.
-SUBLEVELS = [(90, height // 6, START_CIRCLE_RADIUS),
-          (180, height // 6, START_CIRCLE_RADIUS),
-          (0, height // 6, START_CIRCLE_RADIUS),
-          (135, height // 6, START_CIRCLE_RADIUS),
-          (45, height // 6, START_CIRCLE_RADIUS),
-          (270, height // 6, START_CIRCLE_RADIUS),
-          (90, height // 5, START_CIRCLE_RADIUS),
-          (180, height // 5, START_CIRCLE_RADIUS),
-          (0, height // 5, START_CIRCLE_RADIUS),
-          (135, height // 5, START_CIRCLE_RADIUS),
-          (45, height // 5, START_CIRCLE_RADIUS),
-          (270, height // 5, START_CIRCLE_RADIUS,),
-          (90, height // 3, START_CIRCLE_RADIUS,),
-          (180, height // 3, START_CIRCLE_RADIUS,),
-          (0, height // 3, START_CIRCLE_RADIUS, ),
-          (135, height // 3, START_CIRCLE_RADIUS, ),
-          (45, height // 3, START_CIRCLE_RADIUS, ),
-          (270, height // 3, START_CIRCLE_RADIUS, ),
-          (90, height // 6, START_CIRCLE_RADIUS, ),
-          (180, height // 6, START_CIRCLE_RADIUS, ),
-          (0, height // 6, START_CIRCLE_RADIUS, ),
-          (135, height // 6, START_CIRCLE_RADIUS, ),
-          (45, height // 6, START_CIRCLE_RADIUS, ),
-          (270, height // 6, START_CIRCLE_RADIUS, ),
-          (90, height // 5, START_CIRCLE_RADIUS, ),
-          (180, height // 5, START_CIRCLE_RADIUS, ),
-          (0, height // 5, START_CIRCLE_RADIUS, ),
-          (135, height // 5, START_CIRCLE_RADIUS, ),
-          (45, height // 5, START_CIRCLE_RADIUS, ),
-          (270, height // 5, START_CIRCLE_RADIUS, ),
-          (90, height // 3, START_CIRCLE_RADIUS, ),
-          (180, height // 3, START_CIRCLE_RADIUS, ),
-          (0, height // 3, START_CIRCLE_RADIUS, ),
-          (135, height // 3, START_CIRCLE_RADIUS, ),
-          (45, height // 3, START_CIRCLE_RADIUS, ),
-          (270, height // 3, START_CIRCLE_RADIUS, ),
-          (90, height // 6, START_CIRCLE_RADIUS, ),
-          (180, height // 6, START_CIRCLE_RADIUS, ),
-          (0, height // 6, START_CIRCLE_RADIUS, ),
-          (135, height // 6, START_CIRCLE_RADIUS, ),
-          (45, height // 6, START_CIRCLE_RADIUS, ),
-          (270, height // 6, START_CIRCLE_RADIUS, ),
-          (90, height // 5, START_CIRCLE_RADIUS, ),
-          (180, height // 5, START_CIRCLE_RADIUS, ),
-          (0, height // 5, START_CIRCLE_RADIUS, ),
-          (135, height // 5, START_CIRCLE_RADIUS, ),
-          (45, height // 5, START_CIRCLE_RADIUS, ),
-          (270, height // 5, START_CIRCLE_RADIUS, ),
-          (90, height // 3, START_CIRCLE_RADIUS, ),
-          (180, height // 3, START_CIRCLE_RADIUS, ),
-          (0, height // 3, START_CIRCLE_RADIUS, ),
-          (135, height // 3, START_CIRCLE_RADIUS,),
-          (45, height // 3, START_CIRCLE_RADIUS, ),
-          (270, height // 3, START_CIRCLE_RADIUS, )]
+SUBLEVELS = [(90, START_CIRCLE_RADIUS),
+          (180, START_CIRCLE_RADIUS),
+          (0,  START_CIRCLE_RADIUS),
+          (135, START_CIRCLE_RADIUS),
+          (45, START_CIRCLE_RADIUS),
+          (270, START_CIRCLE_RADIUS),]
 
 ###################################################################################
 
@@ -90,14 +38,15 @@ SUBLEVELS = [(90, height // 6, START_CIRCLE_RADIUS),
 timer_length = TIME_BETWEEN_SUBLEVELS_CHANGES
 
 # Setting up different levels of difficulty.
-max_number_of_fails = MAXIMUM_NUMBER_OF_FAILS
-lvl_index = 0
-course = Course(*SUBLEVELS[lvl_index])
+number_of_trial = NUMBER_OF_TRIAL
+sublvl_index = 0
+max_distance_reached = 0
+course = Course(*SUBLEVELS[sublvl_index], max_distance_reached)
 
 # Font parameters and text initialization.
 text_timer = Text('', 0, 0)
 text_lvl = Text('', 0, 0)
-text_lvl.change_text(str(lvl_index))
+text_lvl.change_text(str(sublvl_index))
 
 # Start coordinates of MPU6050.
 cursor = Cursor(GAIN_OF_MPU6050) 
@@ -110,12 +59,10 @@ data = DataFile(path_to_mesures)
 timer = Timer(timer_length)
 
 # Starting game.
-n_fail = 0
-prev_failed = False
-failed = False
+n_try = 0
 bg_color = ORANGE
 run = True
-distance_reached = 0 
+ 
 
 t0 = time.time()
 dt = 0.023    # a verifier quelle est la frequence d'echantillonage
@@ -127,20 +74,42 @@ while run:
     t = time.time() - t0
     cursor.update_position()
     y_pos = cursor.get_position()[1]
-    
+
+    if y_pos > distance_reached:
+        max_distance_reached = y_pos
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 run = False
-    
-    if y_pos > distance_reached:
-        distance_reached = y_pos
-    
-    if not course.cursor_inside_start_circle(cursor):
+
+    if course.cursor_inside_start_circle(cursor):
         bg_color = GREEN
-        course.update_colors(bg_color)
+        remaining_time = str(timer.get_remaining_time())
+        text_timer.change_text(remaining_time)
+
+    else:
+        bg_color = ORANGE
+        timer.reset()
+        text_timer.hide()
+
+    if timer.is_over():
+        if n_try < (NUMBER_OF_TRIAL-1):
+            n_try += 1
+        else:
+            sublvl_index += 1
+            max_distance_reached = 0 
+            if sublvl_index == len(SUBLEVELS):
+                display_congrats(display, bg_color, WHITE)
+                run = False
+                break
+        
+        new_distance = max_distance_reached
+        course = Course(*SUBLEVELS[sublvl_index], new_distance)
+        timer.reset()
+    
 
     # Draw text.
     text_timer.draw(display, 100, 75)
@@ -156,8 +125,8 @@ while run:
     pause = next_t - (time.time() - t0)
     if (pause>0):
         time.sleep(pause)
-    data.record_mpu6050_data(t, cursor, lvl_index)
+    data.record_mpu6050_data(t, cursor, sublvl_index)
 
 pygame.quit()
 
-plot_session_graphs(path_to_mesures)
+#plot_session_graphs(path_to_mesures)
