@@ -118,7 +118,7 @@ while run:
     text_lvl.draw(display, 25, height-70)
 
     # Get position of the cursor and draw a red circle on it.
-    display.fill(bg_color)
+    #display.fill(bg_color)
     course.draw(display)
     cursor.draw(display)
     pygame.display.update()
