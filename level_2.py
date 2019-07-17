@@ -73,9 +73,10 @@ while run:
     pygame.mouse.set_visible(False)
     t = time.time() - t0
     cursor.update_position()
-    y_pos = height - cursor.get_position()[1] 
+    y_pos = height//2 - cursor.get_position()[1]
+    print(y_pos)
 
-    if y_pos < max_distance_reached:
+    if y_pos > max_distance_reached:
         max_distance_reached = y_pos
 
     for event in pygame.event.get():
@@ -102,13 +103,15 @@ while run:
             n_try += 1
         else:
             sublvl_index += 1
-            max_distance_reached = 0 
+            max_distance_reached = 0
+            text_lvl.change_text(str(sublvl_index))
             if sublvl_index == len(SUBLEVELS):
                 display_congrats(display, bg_color, WHITE)
                 run = False
                 break
         
         new_distance = max_distance_reached
+        print(new_distance)
         course = Course(*SUBLEVELS[sublvl_index], new_distance)
         timer.reset()
     
