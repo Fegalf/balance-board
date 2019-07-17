@@ -73,7 +73,7 @@ while run:
     pygame.mouse.set_visible(False)
     t = time.time() - t0
     cursor.update_position()
-    y_pos = cursor.get_position()[1]
+    y_pos = height - cursor.get_position()[1] 
 
     if y_pos < max_distance_reached:
         max_distance_reached = y_pos
