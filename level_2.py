@@ -86,11 +86,12 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 run = False
 
-    if course.cursor_inside_start_circle(cursor) and not just_finished:
-        bg_color = GREEN
-        remaining_time = str(timer.get_remaining_time())
-        text_timer.change_text(remaining_time)
-        course.update_colors(bg_color)
+    if course.cursor_inside_start_circle(cursor):
+        if not just_finished:
+            bg_color = GREEN
+            remaining_time = str(timer.get_remaining_time())
+            text_timer.change_text(remaining_time)
+            course.update_colors(bg_color)
 
     else:
         just_finished = False
