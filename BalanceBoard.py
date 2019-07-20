@@ -150,9 +150,10 @@ class Course:
         return self.start_circle.cursor_is_inside(cursor)
 
     def draw(self, display):
+        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 3)
         self.line.draw(display)
         self.start_circle.draw(display)
-        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 3)
+        
 
     def update_colors(self, start_circle_color):
         self.start_circle.update_color(start_circle_color)
