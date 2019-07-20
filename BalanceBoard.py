@@ -42,6 +42,7 @@ class DistanceLine(object):
         return end_x, end_y
 
     def draw(self, display):
+        print(self.start_xy)
         pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
  
 class EmptyCircle:
