@@ -2,11 +2,12 @@
 
 import pygame
 import time
+import numpy as np
 import math
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE, GREY
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
                          plot_session_graphs, display_congrats, \
-                         point_inside_polygon, Course, DistanceLine
+                         point_inside_polygon, Course, DistanceLine, get_center_of_display
 
 # Init top window in full screen.
 pygame.init()
@@ -63,21 +64,48 @@ n_try = 0
 bg_color = ORANGE
 run = True
  
-
 t0 = time.time()
 dt = 0.023    # a verifier quelle est la frequence d'echantillonage
 next_t = dt
 display.fill(bg_color)
 just_finished = False
 
+def get_projection_on_path(cursor, angle_of_path):
+    x, y = cursor.get_position()
+    xc, yc = get_center_of_display()
+    cos = np.cos(np.radians(angle_of_path))
+    r = np.sqrt((x - xc)**2 + (y - yc)**2 )
+    p = r*cos
+    if angle_of_path == 0:
+        if x < xc:
+            p = 0
+    if angle_of_path == 45:
+        if x < xc or y > yc:
+            p = 0
+    if angle_of_path == 90:
+        if y > yc:
+            p = 0
+    if angle_of_path == 135:
+        if y > yc or x > xc:
+            p = 0
+    if angle_of_path == 180: 
+        if x > xc:
+            p = 0
+    if angle_of_path == 270: 
+        if y < yc:
+            p = 0
+        
+    return p
+
 while run:
     pygame.mouse.set_visible(False)
     t = time.time() - t0
     cursor.update_position()
-    y_pos = height//2 - cursor.get_position()[1]
+    angle_of_path = SUBLEVELS[sublvl_index][0]
+    d = get_projection_on_path(cursor, angle_of_path)
 
-    if y_pos > max_distance_reached:
-        max_distance_reached = y_pos
+    if d > max_distance_reached:
+        max_distance_reached = d
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
