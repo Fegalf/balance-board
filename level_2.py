@@ -87,6 +87,7 @@ while run:
                 run = False
 
     if course.cursor_inside_start_circle(cursor):
+        bg_color = ORANGE
         if not just_finished:
             bg_color = GREEN
             remaining_time = str(timer.get_remaining_time())
