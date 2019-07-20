@@ -118,7 +118,7 @@ while run:
         timer.reset()
     
     # Draw text.
-    display.fill(bg_color)
+    #display.fill(bg_color)
     text_timer.draw(display, 100, 75)
     text_lvl.draw(display, 25, height-70)
 
