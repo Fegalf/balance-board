@@ -38,7 +38,7 @@ class DistanceLine(object):
         sin = np.sin(self.angle)
         cos = np.cos(self.angle)
         end_x = int(self.start_xy[0] + cos * self.distance)
-        end_y = int(self.start_xy[1] - sin * self.distance)
+        end_y = int(self.start_xy[1] + sin * self.distance)
         return end_x, end_y
 
     def draw(self, display):
