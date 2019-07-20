@@ -33,7 +33,7 @@ class DistanceLine:
         self.start_xy = (x_center, y_center)
         self.end_xy = self.compute_line_end_xy()
         self.color = color
-        self.end_circle = FilledCircle(*self.end_xy, 5, self.color)
+        self.end_circle = FilledCircle(*self.end_xy, 50, self.color)
 
     def compute_line_end_xy(self):
         sin = np.sin(self.angle)
