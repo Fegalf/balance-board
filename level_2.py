@@ -3,7 +3,7 @@
 import pygame
 import time
 import math
-from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE
+from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE, GREY
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
                          plot_session_graphs, display_congrats, \
                          point_inside_polygon, Course
