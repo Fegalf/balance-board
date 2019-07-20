@@ -104,7 +104,6 @@ while run:
     if timer.is_over():
         if n_try < (NUMBER_OF_TRIAL-1):
             n_try += 1
-            just_finished = True
         else:
             sublvl_index += 1
             max_distance_reached = 0
@@ -113,12 +112,11 @@ while run:
                 display_congrats(display, bg_color, WHITE)
                 run = False
                 break
-        
+        just_finished = True
         new_distance = max_distance_reached
         course = Course(*SUBLEVELS[sublvl_index], new_distance)
         timer.reset()
     
-
     # Draw text.
     display.fill(bg_color)
     text_timer.draw(display, 100, 75)
