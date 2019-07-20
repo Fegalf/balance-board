@@ -41,31 +41,9 @@ class DistanceLine:
         end_y = int(self.start_xy[1] - sin * self.distance)
         return end_x, end_y
 
-    def _compute_polygon_points(self, x_center, y_center):
-        points = []
-
-        sin = np.sin(self.angle)
-        cos = np.cos(self.angle)
-        sin0 = np.sin(self.angle - np.pi/2)
-        cos0 = np.cos(self.angle - np.pi/2)
-
-        p0_x = int(x_center + self.distance * cos0)
-        p0_y = int(y_center + self.distance * sin0)
-        points.append((p0_x, p0_y))
-
-        p1_x = int(x_center - self.distance * cos0)
-        p1_y = int(y_center - self.distance * sin0)
-        points.append((p1_x, p1_y))
-
-        p2_x = int(x_center + self.distance * cos - self.distance * sin)
-        p2_y = int(y_center + self.distance * sin + self.distance * cos)
-        points.append((p2_x, p2_y))
-
-        return points
-
     def draw(self, display):
         pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
-        pygame.draw.circle(display, self.color, self.end_xy, 6)
+        pygame.draw.circle(display, self.color, self.end_xy, 4)
  
 class EmptyCircle:
     def __init__(self, x, y, radius):
@@ -150,10 +128,9 @@ class Course:
         return self.start_circle.cursor_is_inside(cursor)
 
     def draw(self, display):
-        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 3)
+        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 2)
         self.line.draw(display)
         self.start_circle.draw(display)
-        
 
     def update_colors(self, start_circle_color):
         self.start_circle.update_color(start_circle_color)
