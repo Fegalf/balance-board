@@ -73,14 +73,17 @@ just_finished = False
 def get_projection_on_path(cursor, angle_of_path):
     x, y = cursor.get_position()
     xc, yc = get_center_of_display()
-    cos = np.cos(np.radians(angle_of_path))
     r = np.sqrt((x - xc)**2 + (y - yc)**2 )
+    beta = np.arctan((x - xc)/(yc - y))  
+    alpha = angle_of_path - beta 
+    cos = np.cos(np.radians(alpha))
     p = r*cos
+
     if angle_of_path == 0:
         if x < xc:
             p = 0
     if angle_of_path == 45:
-        if x < xc or y > yc:
+        if (x < xc) or (y > yc):
             p = 0
     if angle_of_path == 90:
         if y > yc:
