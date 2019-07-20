@@ -24,7 +24,7 @@ class Timer:
     def get_remaining_time(self):
         return (self.t_end - pygame.time.get_ticks()) // 1000 + 1
 
-class DistanceLine:
+class DistanceLine(object):
     def __init__(self, distance, angle, x_center, y_center, color):
         #TODO: REPLACE CIRCLE BY TRIANGLE 
         # angle in radians.
