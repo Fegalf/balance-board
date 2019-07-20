@@ -33,7 +33,6 @@ class DistanceLine:
         self.start_xy = (x_center, y_center)
         self.end_xy = self.compute_line_end_xy()
         self.color = color
-        self.end_circle = FilledCircle(*self.end_xy, 50, self.color)
 
     def compute_line_end_xy(self):
         sin = np.sin(self.angle)
@@ -44,7 +43,7 @@ class DistanceLine:
 
     def draw(self, display):
         pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
-        self.end_circle.draw(display)
+        pygame.draw.circle(display, self.color, self.end_xy, 10)
  
 class EmptyCircle:
     def __init__(self, x, y, radius):
