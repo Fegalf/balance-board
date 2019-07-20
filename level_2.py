@@ -108,6 +108,7 @@ while run:
             sublvl_index += 1
             max_distance_reached = 0
             text_lvl.change_text(str(sublvl_index))
+            n_try = 0 
             if sublvl_index == len(SUBLEVELS):
                 display_congrats(display, bg_color, WHITE)
                 run = False
