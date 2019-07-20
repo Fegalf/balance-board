@@ -68,13 +68,13 @@ t0 = time.time()
 dt = 0.023    # a verifier quelle est la frequence d'echantillonage
 next_t = dt
 display.fill(bg_color)
+just_finished = False
 
 while run:
     pygame.mouse.set_visible(False)
     t = time.time() - t0
     cursor.update_position()
     y_pos = height//2 - cursor.get_position()[1]
-    print(y_pos)
 
     if y_pos > max_distance_reached:
         max_distance_reached = y_pos
@@ -86,13 +86,14 @@ while run:
             if event.key == pygame.K_ESCAPE:
                 run = False
 
-    if course.cursor_inside_start_circle(cursor):
+    if course.cursor_inside_start_circle(cursor) and not just_finished:
         bg_color = GREEN
         remaining_time = str(timer.get_remaining_time())
         text_timer.change_text(remaining_time)
         course.update_colors(bg_color)
 
     else:
+        just_finished = False
         bg_color = ORANGE
         course.update_colors(bg_color)
         timer.reset()
@@ -101,6 +102,7 @@ while run:
     if timer.is_over():
         if n_try < (NUMBER_OF_TRIAL-1):
             n_try += 1
+            just_finished = True
         else:
             sublvl_index += 1
             max_distance_reached = 0
@@ -111,7 +113,6 @@ while run:
                 break
         
         new_distance = max_distance_reached
-        print(new_distance)
         course = Course(*SUBLEVELS[sublvl_index], new_distance)
         timer.reset()
     
