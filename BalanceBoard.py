@@ -42,9 +42,8 @@ class DistanceLine(object):
         return end_x, end_y
 
     def draw(self, display):
-        print(self.start_xy)
         pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
- 
+        pygame.draw.circle(display, self.color, self.end_xy, 4 )
 class EmptyCircle:
     def __init__(self, x, y, radius):
         self.x = x
@@ -122,7 +121,7 @@ class Course:
         self.y_end_guide = int(self.y_start + 2000 * np.sin(self.angle_in_rads))
 
         self.start_circle = FilledCircle(self.x_start, self.y_start, start_circle_r, self.start_circle_color)
-        self.line = DistanceLine(self.distance, self.angle_in_rads, self.x_end, self.y_end, BLACK)
+        self.line = DistanceLine(self.distance, self.angle_in_rads, self.x_start, self.y_start, BLACK)
 
     def cursor_inside_start_circle(self, cursor):
         return self.start_circle.cursor_is_inside(cursor)
