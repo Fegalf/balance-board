@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 from pygame import gfxdraw
-from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE
+from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE, GREY
 from mpu6050_interface import MPU6050
 
 class Timer:
@@ -136,10 +136,12 @@ class Course:
         self.timer = Timer(duration_in_seconds)
         self.angle_in_rads = np.radians(-angle_in_degrees)
 
-        # colors
         self.start_circle_color = start_circle_color
         self.x_end = int(self.x_start + self.distance * np.cos(self.angle_in_rads))
         self.y_end = int(self.y_start + self.distance * np.sin(self.angle_in_rads))
+
+        self.x_end_guide = int(self.x_start + 2000 * np.cos(self.angle_in_rads))
+        self.y_end_guide = int(self.y_start + 2000 * np.sin(self.angle_in_rads))
 
         self.start_circle = FilledCircle(self.x_start, self.y_start, start_circle_r, self.start_circle_color)
         self.line = DistanceLine(self.distance, self.angle_in_rads, self.x_end, self.y_end, BLACK)
@@ -150,6 +152,7 @@ class Course:
     def draw(self, display):
         self.line.draw(display)
         self.start_circle.draw(display)
+        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 3)
 
     def update_colors(self, start_circle_color):
         self.start_circle.update_color(start_circle_color)
