@@ -99,25 +99,6 @@ def get_projection_on_path(cursor, angle_of_path):
     except:
         p = 0
 
-    if angle_of_path == 0:
-        if x < xc:
-            p = 0
-    if angle_of_path == 45:
-        if (x < xc) or (y > yc):
-            p = 0
-    if angle_of_path == 90:
-        if y > yc:
-            p = 0
-    if angle_of_path == 135:
-        if y > yc or x > xc:
-            p = 0
-    if angle_of_path == 180: 
-        if x > xc:
-            p = 0
-    if angle_of_path == 270: 
-        if y < yc:
-            p = 0
-        
     return p
 
 while run:
