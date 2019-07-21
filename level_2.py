@@ -5,7 +5,7 @@ import time
 import numpy as np
 import math
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE, GREY
-from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
+from BalanceBoard import Timer, EmptyCircle, Text, Mouse, DataFile, \
                          plot_session_graphs, display_congrats, \
                          point_inside_polygon, Course, DistanceLine, get_center_of_display
 
@@ -50,7 +50,7 @@ text_lvl = Text('', 0, 0)
 text_lvl.change_text(str(sublvl_index))
 
 # Start coordinates of MPU6050.
-cursor = Cursor(GAIN_OF_MPU6050) #Mouse(GAIN_OF_MPU6050)
+cursor = Mouse(GAIN_OF_MPU6050) #Mouse(GAIN_OF_MPU6050)
 
 # Initialize mesures file.
 path_to_mesures = 'mesures.csv'
@@ -84,7 +84,6 @@ def get_projection_on_path(cursor, angle_of_path):
 
     except:
         p = 0
-    print(p)
     return p
 
 while run:
@@ -150,7 +149,7 @@ while run:
     pause = next_t - (time.time() - t0)
     if (pause>0):
         time.sleep(pause)
-    data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
+    #data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
 
 pygame.quit()
 

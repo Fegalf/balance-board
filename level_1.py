@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats, time
+from BalanceBoard import Timer, EmptyCircle, Text, Mouse, DataFile, plot_session_graphs, display_congrats, time
 from color_scheme import *
 
 def level_1():
@@ -42,7 +42,7 @@ def level_1():
     timer_10s = Timer(timer_length)
 
     # Initialize MPU6050 cursor.
-    cursor = Cursor(GAIN_OF_MPU6050,cursor_r=7)
+    cursor = Mouse(GAIN_OF_MPU6050, cursor_r=7)
 
     # Font parameters and text initialization.
     text_timer = Text('', 0, 0)
@@ -113,7 +113,7 @@ def level_1():
         cursor.draw(display)
         
         # Record data. 
-        data.record_mpu6050_data(t, cursor, difficulty)
+        #data.record_mpu6050_data(t, cursor, difficulty)
 
         pygame.display.update()
         

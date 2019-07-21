@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
+import multiprocessing as mp 
 import os 
 
 class BalanceBoardGame(tk.Frame):
@@ -41,8 +42,10 @@ class BalanceBoardGame(tk.Frame):
         self.calibration = None 
 
     def run_calibration(self):
-        from calibration import run_calibration
-        self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
+        
+        if False:
+            from calibration import run_calibration
+            self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
         self.activate_widget(self.button_g0)
         self.activate_widget(self.button_g1)
         self.activate_widget(self.button_g2)
