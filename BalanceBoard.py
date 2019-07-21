@@ -256,6 +256,7 @@ class Cursor:
         self.K1 = 1 - self.K
 
     def update_position(self,):
+        self.trail.append((self.x, self.y))
         x_rotation, y_rotation, _, x_gyro, y_gyro = self.mpu6050.read_data()
         self.x_rotation = x_rotation
         self.y_rotation = y_rotation
