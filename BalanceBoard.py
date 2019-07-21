@@ -4,6 +4,7 @@ import pygame
 import matplotlib.pyplot as plt
 import numpy as np
 import time
+import collections
 from pygame import gfxdraw
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE, GREY
 from mpu6050_interface import MPU6050
@@ -37,13 +38,14 @@ class DistanceLine(object):
     def compute_line_end_xy(self):
         sin = np.sin(self.angle)
         cos = np.cos(self.angle)
-        end_x = int(self.start_xy[0] + cos * self.distance)
-        end_y = int(self.start_xy[1] + sin * self.distance)
+        end_x = int(round(self.start_xy[0] + cos * self.distance))
+        end_y = int(round(self.start_xy[1] + sin * self.distance))
         return end_x, end_y
 
     def draw(self, display):
         pygame.draw.line(display, self.color, self.start_xy, self.end_xy, 3)
-        pygame.draw.circle(display, self.color, self.end_xy, 5)
+        #pygame.draw.circle(display, self.color, self.end_xy, 3)
+        pygame.gfxdraw.filled_circle(display, *self.end_xy, 5, self.color)
 
 class EmptyCircle:
     def __init__(self, x, y, radius):
@@ -115,11 +117,11 @@ class Course:
         self.angle_in_rads = np.radians(-angle_in_degrees)
 
         self.start_circle_color = start_circle_color
-        self.x_end = int(self.x_start + self.distance * np.cos(self.angle_in_rads))
-        self.y_end = int(self.y_start + self.distance * np.sin(self.angle_in_rads))
+        self.x_end = int(round(self.x_start + self.distance * np.cos(self.angle_in_rads)))
+        self.y_end = int(round(self.y_start + self.distance * np.sin(self.angle_in_rads)))
 
-        self.x_end_guide = int(self.x_start + 2000 * np.cos(self.angle_in_rads))
-        self.y_end_guide = int(self.y_start + 2000 * np.sin(self.angle_in_rads))
+        self.x_end_guide = int(round(self.x_start + 2000 * np.cos(self.angle_in_rads)))
+        self.y_end_guide = int(round(self.y_start + 2000 * np.sin(self.angle_in_rads)))
 
         self.start_circle = FilledCircle(self.x_start, self.y_start, start_circle_r, self.start_circle_color)
         self.line = DistanceLine(self.distance, self.angle_in_rads, self.x_start, self.y_start, BLACK)
@@ -128,7 +130,7 @@ class Course:
         return self.start_circle.cursor_is_inside(cursor)
 
     def draw(self, display):
-        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 2)
+        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 1)
         self.line.draw(display)
         self.start_circle.draw(display)
 
@@ -235,6 +237,9 @@ class Cursor:
         self.cursor_r = cursor_r
         self.color = color
 
+        self.trail_length = 80
+        self.trail = collections.deque([], self.trail_length)
+
         self.gain = gain
         self.mpu6050 = MPU6050()
 
@@ -272,10 +277,36 @@ class Cursor:
         
     def draw(self, display):
         pygame.draw.circle(display, self.color, self.get_position(), self.cursor_r)
+        for xy in self.trail:
+            pygame.draw.circle(display, self.color, xy, 2)
         
     def get_position(self,):
         return self.x, self.y
 
+class Mouse:
+    def __init__(self, gain, cursor_r=5, color=WHITE):
+
+        self.x_center, self.y_center = get_center_of_display()
+        self.x = self.x_center
+        self.y = self.y_center
+        self.cursor_r = cursor_r
+        self.color = color
+
+        self.trail_length = 80
+        self.trail = collections.deque([], self.trail_length)
+        self.gain = gain
+
+    def update_position(self,):
+        self.trail.append((self.x, self.y))
+        self.x, self.y = pygame.mouse.get_pos()
+        
+    def draw(self, display):
+        pygame.draw.circle(display, self.color, self.get_position(), self.cursor_r)
+        for xy in self.trail:
+            pygame.draw.circle(display, self.color, xy, 2)
+        
+    def get_position(self,):
+        return self.x, self.y
 
 class DataFile:
     def __init__(self, path_to_csv_file):
@@ -294,9 +325,9 @@ class DataFile:
     def __exit__(self,):
         self.f.close()
         
-    def record_mpu6050_data(self, t, cursor, niveau):
+    def record_mpu6050_data(self, t, cursor, level, sublevel):
         self.f.write("{0:10f}, {1:4.1f}, {2:4.1f}, {3:4.1f}, {4:4.1f}, "
-                      "{5:4.1f}, {6:4.1f}, {7:4.1f}\n".format(t, niveau,
+                      "{5:4.1f}, {6:4.1f}, {7:4.1f}\n".format(t, level, sublevel,
                                                     cursor.x_rotation,
                                                     cursor.y_rotation,
                                                     cursor.gyro_total_x,

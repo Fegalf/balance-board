@@ -20,7 +20,7 @@ height = pygame.display.get_surface().get_size()[1]
 ############################## LEVELS PARAMETERS ##############################
 
 START_CIRCLE_RADIUS = 30
-TIME_BETWEEN_SUBLEVELS_CHANGES = 5
+TIME_BETWEEN_SUBLEVELS_CHANGES = 2
 
 GAIN_OF_MPU6050 = 10  # Gain values should be calibrated using the balance board (trials and errors).
 NUMBER_OF_TRIAL = 3
@@ -50,7 +50,7 @@ text_lvl = Text('', 0, 0)
 text_lvl.change_text(str(sublvl_index))
 
 # Start coordinates of MPU6050.
-cursor = Cursor(GAIN_OF_MPU6050) 
+cursor = Cursor(GAIN_OF_MPU6050) #Mouse(GAIN_OF_MPU6050)
 
 # Initialize mesures file.
 path_to_mesures = 'mesures.csv'
@@ -73,32 +73,18 @@ just_finished = False
 def get_projection_on_path(cursor, angle_of_path):
     x, y = cursor.get_position()
     xc, yc = get_center_of_display()
-    r = np.sqrt((x - xc)**2 + (y - yc)**2 )
-    
+    L = np.sqrt((x - xc)**2 + (yc - y)**2 )
+    theta = np.radians(angle_of_path)
+
     try:
-
-        if (x > xc) and (y<yc):
-            beta = np.arctan((x - xc)/(yc - y))
-            alpha = angle_of_path - beta 
-
-        elif (x < xc) and (y <yc):
-            beta = np.pi/2 - np.arctan((xc-x)/(yc - y))
-            alpha = angle_of_path - beta 
-
-        elif (x > xc) and (y >yc):
-            beta = np.arctan((x - xc)/(y - yc))
-            alpha = angle_of_path - beta 
-
-        elif (x < xc) and (y > yc):
-            beta = np.arctan((xc - x)/(y - yc))
-            alpha = angle_of_path - beta 
-        
-        cos = np.cos(np.radians(alpha))
-        p = r*cos
+        alpha = np.arctan2((yc - y), (x - xc))
+        sin_theta, cos_theta = np.sin(theta), np.cos(theta)
+        sin_alpha, cos_alpha = np.sin(alpha), np.cos(alpha)
+        p = L * (cos_alpha * cos_theta + sin_theta * sin_alpha) 
 
     except:
         p = 0
-
+    print(p)
     return p
 
 while run:
@@ -164,7 +150,7 @@ while run:
     pause = next_t - (time.time() - t0)
     if (pause>0):
         time.sleep(pause)
-    data.record_mpu6050_data(t, cursor, sublvl_index)
+    data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
 
 pygame.quit()
 
