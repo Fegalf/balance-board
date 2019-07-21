@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 import os 
-from calibration import run_calibration
-
+import pygame
+import thorpy as tp
 class BalanceBoardGame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -42,6 +42,8 @@ class BalanceBoardGame(tk.Frame):
         self.calibration = None 
 
     def run_calibration(self):
+        pass
+        from calibration import run_calibration
         self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
         self.activate_widget(self.button_g0)
         self.activate_widget(self.button_g1)

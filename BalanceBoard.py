@@ -237,7 +237,7 @@ class Cursor:
         self.cursor_r = cursor_r
         self.color = color
 
-        self.trail_length = 80
+        self.trail_length = 60
         self.trail = collections.deque([], self.trail_length)
 
         self.gain = gain
@@ -293,7 +293,7 @@ class Mouse:
         self.cursor_r = cursor_r
         self.color = color
 
-        self.trail_length = 80
+        self.trail_length = 60
         self.trail = collections.deque([], self.trail_length)
         self.gain = gain
 

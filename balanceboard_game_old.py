@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 import os 
-from calibration import run_calibration
 
 class BalanceBoardGame(tk.Frame):
     def __init__(self, master=None):
@@ -42,6 +41,7 @@ class BalanceBoardGame(tk.Frame):
         self.calibration = None 
 
     def run_calibration(self):
+        from calibration import run_calibration
         self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
         self.activate_widget(self.button_g0)
         self.activate_widget(self.button_g1)
@@ -56,7 +56,8 @@ class BalanceBoardGame(tk.Frame):
         level_1()
 
     def run_game_2(self):
-        pass
+        from level_1 import level_1
+        level_1()
 
     def create_participant_folder_and_enable_calibration(self):
         """Create participant data folder if it does not already exist."""
