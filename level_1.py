@@ -4,14 +4,12 @@ import pygame
 from BalanceBoard import Timer, EmptyCircle, Text, Mouse, DataFile, plot_session_graphs, display_congrats, time
 from color_scheme import *
 
-def level_1():
+def level_1(path_to_data_folder):
     ################### LEVEL PARAMETERS ###################
-
     BIG_CIRCLE_RADIUS = 150 # in pixels.
     TIME_BETWEEN_DIFFICULTY_CHANGES = 10  # in seconds.
     GAIN_OF_MPU6050 = 10  # arbitrary value (test for other gain values).
     N_DIFFICULTY_LEVELS = 9
-
     ########################################################
 
     # Initialize circles radiuses (in pixels).
@@ -26,8 +24,7 @@ def level_1():
 
     # Init top window in full screen.
     pygame.init()
-    #display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-    display = pygame.display.set_mode([1000, 1000])
+    display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption("Balance Board")
 
     # Get width and height of display.
@@ -48,7 +45,7 @@ def level_1():
     text_timer = Text('', 0, 0)
 
     # Initialize mesures file.
-    path_to_mesures = 'mesures.csv'
+    path_to_mesures = path_to_data_folder
     data = DataFile(path_to_mesures)
 
     t0 = time.time()
@@ -121,8 +118,6 @@ def level_1():
         pause = next_t - (time.time()-t0)
         if (pause>0):
             time.sleep(pause)
-        
-    pygame.quit()
 
     # Plots of various measures.
     plot_session_graphs(path_to_mesures)

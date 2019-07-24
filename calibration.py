@@ -9,16 +9,13 @@ def run_calibration():
     dt = 0.023    # à vérifier quelle est la fréquence d'échantillonage
     timeCt = 0.5 # à tester
 
-    def comp_filter(acc,rate):
-        return
-
     def mesure_offset_gyro():
         dt = 0.01
         gyro_total_x = 0
         gyro_total_y = 0
         next_t = time.time()
         for ii in range(100):
-            x_rotation, y_rotation,accel_zout,x_gyro,y_gyro = mpu6050.read_data()
+            x_rotation, y_rotation, accel_zout, x_gyro,y_gyro = mpu6050.read_data()
 
             gyro_total_x = gyro_total_x + dt*x_gyro
             gyro_total_y = gyro_total_y + dt*y_gyro

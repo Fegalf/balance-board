@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-
 import pygame
 import matplotlib.pyplot as plt
 import numpy as np
+from fpdf import FPDF
 import time
 import collections
 from pygame import gfxdraw
@@ -340,72 +340,6 @@ def get_center_of_display():
     x, y = pygame.display.get_surface().get_size()
     return x//2, y//2
 
-def plot_session_graphs(path_to_file):
-    fichierData = open(path_to_file, 'r')
-    temps = []
-    niveau = []
-    angleX = []
-    angleY = []
-    accX = []
-    accY = []
-    gyroX = []
-    gyroY = []
-    
-    # skip headers line.
-    next(fichierData)
-    
-    for x in fichierData:
-        ledata = [float(y) for y in x.split(', ')]
-        temps.append(ledata[0])
-        niveau.append(ledata[1])
-        accX.append(ledata[2])
-        accY.append(ledata[3])
-        gyroX.append(ledata[4])
-        gyroY.append(ledata[5])
-        angleX.append(ledata[6])
-        angleY.append(ledata[7])
-
-    fichierData.close()
-
-    plt.figure(1)  
-    plt.subplot(221)
-    plt.plot(temps, angleX)
-    plt.xlabel('time [sec]')
-    plt.ylabel('angle X [deg]')
-    plt.grid(True)
-    plt.subplot(222)
-    plt.hist(angleX, 50, density=1, facecolor='g', alpha=0.75)
-    plt.xlabel('angle X [deg]')
-    plt.title("$\mu_x$={0:4.1f}$^\circ$, $\sigma_x$={1:4.1f}$^\circ$".format(np.mean(angleX), np.std(angleX)))
-    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-    plt.grid(True)
-    plt.subplot(223)
-    plt.plot(temps,angleY)
-    plt.xlabel('time [sec]')
-    plt.ylabel('angle Y [deg]')
-    plt.grid(True)
-    plt.subplot(224)
-    plt.hist(angleY, 50, density=1, facecolor='g', alpha=0.75)
-    plt.xlabel('angle Y [deg]')
-    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-    plt.title("$\mu_y$={0:4.1f}$^\circ$, $\sigma_y$={1:4.1f}$^\circ$".format(np.mean(angleY),np.std(angleY)))
-    plt.grid(True)
-    #plt.show()
-
-    plt.figure(2)
-    plt.subplot(211)
-    plt.plot(temps, angleX, temps, gyroX, temps, accX)
-    plt.xlabel('time [sec]')
-    plt.ylabel('angle X [deg]')
-    plt.grid(True)
-    plt.title('Les angles')
-    plt.subplot(212)
-    plt.plot(temps, angleY, temps, gyroY, temps, accY)
-    plt.xlabel('time [sec]')
-    plt.ylabel('angle Y [deg]')
-    plt.grid(True)
-    plt.show()
-
 
 def display_congrats(display, bg_color, text_color=WHITE):
     myfont = pygame.font.SysFont('elephant', 70)
@@ -458,3 +392,219 @@ def point_inside_polygon(x, y, poly, include_edges=True):
         p1x, p1y = p2x, p2y
 
     return inside
+
+
+def plot_session_graphs(path_to_file):
+    fichierData = open(path_to_file, 'r')
+    temps = []
+    niveau = []
+    angleX = []
+    angleY = []
+    accX = []
+    accY = []
+    gyroX = []
+    gyroY = []
+    
+    # skip headers line.
+    next(fichierData)
+    
+    for x in fichierData:
+        ledata = [float(y) for y in x.split(', ')]
+        temps.append(ledata[0])
+        niveau.append(ledata[1])
+        accX.append(ledata[2])
+        accY.append(ledata[3])
+        gyroX.append(ledata[4])
+        gyroY.append(ledata[5])
+        angleX.append(ledata[6])
+        angleY.append(ledata[7])
+
+    fichierData.close()
+
+    # on fait les statistiques
+    temps = np.array(temps)
+    niveau = (np.array(niveau)).astype(int)
+    angleX = np.array(angleX)
+    angleY = np.array(angleY)
+    dureeDuNiveau = []
+    rayonMoyenDuNiveau = []
+    angleTotal = np.sqrt(np.square(angleX)+np.square(angleY))
+    meandist = np.mean(angleTotal)
+    distanceDuNiveau = []
+ 
+
+    
+    print('Le fichier contient {:d} lignes de data'.format(int(angleX.size+1)))
+    print("Niveaux de {:d} à {:d}".format(min(niveau),max(niveau)))
+    
+    for ii in range(min(niveau),max(niveau)+1):
+        debut = min(temps[niveau==ii])
+        fin = max(temps[niveau==ii])
+        dureeDuNiveau.append(fin-debut)
+        rayon = np.sqrt(np.square(angleX[niveau==ii])+np.square(angleY[niveau==ii]))
+        rayonMoyenDuNiveau.append(np.mean(rayon))
+        distanceDuNiveau.append(np.sum(np.sqrt(np.square(np.diff(angleX[niveau==ii])) + np.square(np.diff(angleY[niveau==ii])))))
+        print("Niveau {:d}: de {:4.1f} à {:4.1f}sec., soit une durée de {:4.1f}sec. avec rayon moyen de {:4.1f} et distance parcourue de {:4.1f}".format(ii,debut,fin,dureeDuNiveau[ii-1],rayonMoyenDuNiveau[ii-1],distanceDuNiveau[ii-1]))
+
+    # On produit les graphiques
+#    plt.figure(1)  
+#    plt.subplot(221)
+#    plt.plot(temps, angleX)
+#    plt.xlabel('time [sec]')
+#    plt.ylabel('angle X [deg]')
+#    plt.grid(True)
+#    plt.subplot(222)
+#    plt.hist(angleX, 50, density=1, facecolor='g', alpha=0.75)
+#    plt.xlabel('angle X [deg]')
+#    plt.title("$\mu_x$={0:4.1f}$^\circ$, $\sigma_x$={1:4.1f}$^\circ$".format(np.mean(angleX), np.std(angleX)))
+#    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+#    plt.grid(True)
+#    plt.subplot(223)
+#    plt.plot(temps,angleY)
+#    plt.xlabel('time [sec]')
+#    plt.ylabel('angle Y [deg]')
+#    plt.grid(True)
+#    plt.subplot(224)
+#    plt.hist(angleY, 50, density=1, facecolor='g', alpha=0.75)
+#    plt.xlabel('angle Y [deg]')
+#    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
+#    plt.title("$\mu_y$={0:4.1f}$^\circ$, $\sigma_y$={1:4.1f}$^\circ$".format(np.mean(angleY),np.std(angleY)))
+#    plt.grid(True)
+#    plt.savefig('angleVSaxe.png')
+#    #plt.show()
+
+    plt.figure(1)
+    #total = 0
+    matrix = np.zeros((61, 61))
+    for n in range(1,int(angleX.size+1)):
+        xi = 0
+        yi = 0
+        if abs(angleX[n-1]) < 15 and abs(angleY[n-1]) < 15:
+            xi = int(round(angleX[n-1] / (0.5)) + 30)
+            yi = int(round(angleY[n-1] / (0.5)) + 30)
+            matrix[yi][xi] = matrix[yi][xi] + 1
+
+    plt.imshow(matrix, aspect='equal', cmap=plt.get_cmap('jet'), extent= [-15,15,-15,15]);
+    plt.title('Déviation Angulaire Moyenne = {0:4.2f}$^\circ$'.format(meandist))
+    plt.xlabel('Degrés horizontals')
+    plt.ylabel('Degrés verticals')
+    plt.colorbar()
+    plt.savefig('heatMap.png')
+    #plt.show()
+
+    plt.figure(2,figsize=(8,3))  
+    plt.subplot(121)
+    plt.plot(temps, angleTotal)
+    plt.xlabel('time [sec]')
+    plt.ylabel('angle total [deg]')
+    plt.title('Angle total')
+    plt.grid(True)
+    plt.subplot(122)
+    plt.hist(angleTotal, 50, density=1, facecolor='g', alpha=0.75)
+    plt.xlabel('angle total [deg]')
+    plt.title("$\mu_t$={0:4.1f}$^\circ$, $\sigma_t$={1:4.1f}$^\circ$".format(np.mean(angleTotal), np.std(angleTotal)))
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('angleVSaxe.png')
+    
+    plt.figure(3,figsize=(8,3))  
+    plt.subplot(121)
+    plt.plot(temps, angleX)
+    plt.xlabel('time [sec]')
+    plt.ylabel('angle X [deg]')
+    plt.title('Angle X')
+    plt.grid(True)
+    plt.subplot(122)
+    plt.hist(angleX, 50, density=1, facecolor='g', alpha=0.75)
+    plt.xlabel('angle X [deg]')
+    plt.title("$\mu_x$={0:4.1f}$^\circ$, $\sigma_x$={1:4.1f}$^\circ$".format(np.mean(angleX), np.std(angleX)))
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('angleVSaxeX.png')
+    
+    plt.figure(4,figsize=(8,3))
+    plt.subplot(121)
+    plt.plot(temps,angleY)
+    plt.xlabel('time [sec]')
+    plt.ylabel('angle Y [deg]')
+    plt.title('Angle Y')
+    plt.grid(True)
+    plt.subplot(122)
+    plt.hist(angleY, 50, density=1, facecolor='g', alpha=0.75)
+    plt.xlabel('angle Y [deg]')
+    plt.title("$\mu_y$={0:4.1f}$^\circ$, $\sigma_y$={1:4.1f}$^\circ$".format(np.mean(angleY),np.std(angleY)))
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('angleVSaxeY.png')
+
+
+
+#    plt.figure(2)
+#    plt.subplot(211)
+#    plt.plot(temps, angleX, temps, gyroX, temps, accX)
+#    plt.xlabel('time [sec]')
+#    plt.ylabel('angle X [deg]')
+#    plt.grid(True)
+#    plt.title('Les angles')
+#    plt.subplot(212)
+#    plt.plot(temps, angleY, temps, gyroY, temps, accY)
+#    plt.xlabel('time [sec]')
+#    plt.ylabel('angle Y [deg]')
+#    plt.grid(True)
+#    plt.show()
+    
+#    
+#plt.figure(2)
+#plt.scatter(angleX, np.negative(angleY), s=np.pi*7, c='red', alpha=0.1)
+#plt.ylim([-30, 30])
+#plt.xlim([-30, 30])
+#plt.grid()
+#plt.plot([-30,30],[0,0], linewidth=1, color='black' )
+#plt.plot([0,0], [-30,30], linewidth=1, color='black')
+#plt.title('General Heat Map')
+#plt.xlabel('Position X')
+#plt.ylabel('Position Y')
+
+    
+    cellHeight = 6
+    cellWidth = 25
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_xy(0, 0)
+    pdf.set_font('arial', 'B', 12)
+    pdf.multi_cell(0, 8, 'Sommaire des résultats pour\n'+path_to_file, 0, 'C')
+    pdf.cell(0,10,' ', 0, 1)
+    pdf.cell(cellWidth, cellHeight, 'Niveau', 1, 0, 'C')
+    pdf.cell(cellWidth, cellHeight, 'Durée', 1, 0, 'C')
+    pdf.cell(cellWidth, cellHeight, 'Distance', 1, 0, 'C')
+    pdf.cell(cellWidth, cellHeight, 'Rayon', 1, 2, 'C')
+    pdf.cell(-3*cellWidth)
+    pdf.set_font('arial', '', 10)
+    for i in range(0, len(dureeDuNiveau)):
+        pdf.cell(cellWidth, cellHeight, '{:d}'.format(i+1), 1, 0, 'C')
+        pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(dureeDuNiveau[i]), 1, 0, 'C')
+        pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(distanceDuNiveau[i]), 1, 0, 'C')
+        pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(rayonMoyenDuNiveau[i]), 1, 2, 'C')
+        pdf.cell(-3*cellWidth)
+    #Le global
+    pdf.cell(cellWidth, cellHeight, 'Global', 1, 0, 'C')
+    pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(max(temps)-min(temps)), 1, 0, 'C')
+    pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(sum(distanceDuNiveau)), 1, 0, 'C')
+    pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(meandist), 1, 2, 'C')
+
+    pdf.set_xy(4*cellWidth+12, 20)
+    pdf.image('heatMap.png', x = None, y = None, w = 105, h = 0, type = '', link = '')
+
+    basDuTableau = (max(niveau)+3)*cellHeight + 35
+    pdf.set_xy(18, basDuTableau)
+    pdf.image('angleVSaxe.png', x = None, y = None, w = 150, h = 0, type = '', link = '')
+
+    pdf.set_xy(18, basDuTableau+55)
+    pdf.image('angleVSaxeX.png', x = None, y = None, w = 150, h = 0, type = '', link = '')
+
+    pdf.set_xy(18, basDuTableau+2*55)
+    pdf.image('angleVSaxeY.png', x = None, y = None, w = 150, h = 0, type = '', link = '')
+
+    pdf.output(path_to_file+'-rapport.pdf', 'F')
+    
+    plt.show()
