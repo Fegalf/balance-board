@@ -245,7 +245,8 @@ class Cursor:
         self.gain = gain
         self.mpu6050 = MPU6050()
 
-        x_rotation, y_rotation, x_gyro, y_gyro = calibration
+        self.calibration = calibration
+        x_rotation, y_rotation, _ ,  x_gyro, y_gyro = self.mpu6050.read_data()
         self.angle_x_filtre = x_rotation
         self.angle_y_filtre = y_rotation
         self.gyro_offset_x = x_gyro
@@ -260,6 +261,13 @@ class Cursor:
     def update_position(self,):
         self.trail.append((self.x, self.y))
         x_rotation, y_rotation, _, x_gyro, y_gyro = self.mpu6050.read_data()
+
+        # Apply calibration 
+        x_rotation -= self.calibration[0]
+        y_rotation -= self.calibration[1]
+        x_gyro -= self.calibration[2]
+        y_gyro -= self.calibration[3]
+        
         self.x_rotation = x_rotation
         self.y_rotation = y_rotation
         
