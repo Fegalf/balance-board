@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 import multiprocessing as mp 
-from .calibration import run_calibration
+from calibration import run_calibration
 import os 
 
 class BalanceBoardGame(tk.Frame):
