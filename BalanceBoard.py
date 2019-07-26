@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 import pygame
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 from fpdf import FPDF
 import time
+import datetime
 import collections
 from pygame import gfxdraw
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE, GREY
-#from mpu6050_interface import MPU6050
+from mpu6050_interface import MPU6050
 
 class Timer:
     def __init__(self, seconds):
@@ -310,10 +312,13 @@ class Mouse:
         return self.x, self.y
 
 class DataFile:
-    def __init__(self, path_to_csv_file):
-        self.f = open(path_to_csv_file, 'w')
-        #self.t0 = time.time()
-    
+    def __init__(self, path_to_data_folder, game_id):
+        participant_id = os.path.basename(os.path.normpath(path_to_data_folder))
+        date = datetime.date.today().strftime("%Y%m%d")
+        time = datetime.datetime.today().strftime("%H%M%S")
+        
+        self.path_to_csv_file = path_to_data_folder + f"/{participant_id}_jeu{game_id}_{date}_{time[:2]}h_{time[2:4]}m_{time[4:]}s.csv"
+        self.f = open(self.path_to_csv_file, 'w')
         self.f.write("{0:}, {1:}, {2:}, {3:}, {4:}, "
                      "{5:}, {6:}, {7:}\n".format('time', 'niveau',
                                                    'x_rotation',

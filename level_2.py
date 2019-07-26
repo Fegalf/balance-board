@@ -5,7 +5,7 @@ import time
 import numpy as np
 import math
 from color_scheme import GREEN, ORANGE, RED, BLACK, WHITE, GREY
-from BalanceBoard import Timer, EmptyCircle, Text, Mouse, DataFile, \
+from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
                          plot_session_graphs, display_congrats, \
                          point_inside_polygon, Course, DistanceLine, get_center_of_display
 
@@ -51,11 +51,10 @@ def level_2(path_to_data_folder):
     text_lvl.change_text(str(sublvl_index))
 
     # Start coordinates of MPU6050.
-    cursor = Mouse(GAIN_OF_MPU6050) #Mouse(GAIN_OF_MPU6050)
+    cursor = Cursor(GAIN_OF_MPU6050) #Mouse(GAIN_OF_MPU6050)
 
     # Initialize mesures file.
-    path_to_mesures = path_to_data_folder 
-    data = DataFile(path_to_mesures)
+    data = DataFile(path_to_data_folder, game_id=2)
 
     #Timer
     timer = Timer(timer_length)
@@ -153,4 +152,4 @@ def level_2(path_to_data_folder):
         #data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
 
     pygame.quit()
-    #plot_session_graphs(path_to_mesures)
+    #plot_session_graphs(data.path_to_csv_file)

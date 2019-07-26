@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import pygame
-from BalanceBoard import Timer, EmptyCircle, Text, Mouse, DataFile, plot_session_graphs, display_congrats, time
+import os
+from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats, time
 from color_scheme import *
 
 def level_1(path_to_data_folder):
@@ -39,14 +40,13 @@ def level_1(path_to_data_folder):
     timer_10s = Timer(timer_length)
 
     # Initialize MPU6050 cursor.
-    cursor = Mouse(GAIN_OF_MPU6050, cursor_r=7)
+    cursor = Cursor(GAIN_OF_MPU6050, cursor_r=7)
 
     # Font parameters and text initialization.
     text_timer = Text('', 0, 0)
 
     # Initialize mesures file.
-    path_to_mesures = path_to_data_folder
-    data = DataFile(path_to_mesures)
+    data = DataFile(path_to_data_folder, game_id=1)
 
     t0 = time.time()
     dt = 0.023    # a verifier quelle est la frequence d'echantillonage
@@ -120,4 +120,5 @@ def level_1(path_to_data_folder):
             time.sleep(pause)
 
     # Plots of various measures.
-    plot_session_graphs(path_to_mesures)
+    #plot_session_graphs(data.path_to_csv_file)
+    pygame.quit()
