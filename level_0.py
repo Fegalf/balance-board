@@ -4,7 +4,7 @@ import pygame
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats, time
 from color_scheme import *
 
-def level_0(path_to_data_folder):
+def level_0(path_to_data_folder, calibration):
     ################### LEVEL PARAMETERS ###################
     GAIN_OF_MPU6050 = 10  # arbitrary value (test for other gain values).
     CENTER_CIRCLE_RADIUS = 30
@@ -28,7 +28,7 @@ def level_0(path_to_data_folder):
     small_circle = EmptyCircle(x_center, y_center, small_circle_r)
 
     # Initialize MPU6050 cursor.
-    cursor = Cursor(GAIN_OF_MPU6050, cursor_r=7)
+    cursor = Cursor(GAIN_OF_MPU6050, cursor_r=7, calibration=calibration)
 
     # Initialize mesures file.
     data = DataFile(path_to_data_folder, game_id=0)

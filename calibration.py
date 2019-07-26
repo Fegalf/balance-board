@@ -61,7 +61,7 @@ def run_calibration():
     # Initialize MPU6050 
     mpu6050 = MPU6050()
 
-    x_rotation, y_rotation,accel_zout,x_gyro,y_gyro = mpu6050.read_data()
+    x_rotation, y_rotation, accel_zout, x_gyro,y_gyro = mpu6050.read_data()
     gyro_offset_x, gyro_offset_y = mesure_offset_gyro();
 
     # Coordonnées de départ au centre

@@ -5,7 +5,7 @@ import os
 from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, plot_session_graphs, display_congrats, time
 from color_scheme import *
 
-def level_1(path_to_data_folder):
+def level_1(path_to_data_folder, calibration):
     ################### LEVEL PARAMETERS ###################
     BIG_CIRCLE_RADIUS = 150 # in pixels.
     TIME_BETWEEN_DIFFICULTY_CHANGES = 10  # in seconds.
@@ -40,7 +40,7 @@ def level_1(path_to_data_folder):
     timer_10s = Timer(timer_length)
 
     # Initialize MPU6050 cursor.
-    cursor = Cursor(GAIN_OF_MPU6050, cursor_r=7)
+    cursor = Cursor(GAIN_OF_MPU6050, cursor_r=7, calibration=calibration)
 
     # Font parameters and text initialization.
     text_timer = Text('', 0, 0)

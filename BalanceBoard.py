@@ -231,7 +231,7 @@ class Text:
 
 
 class Cursor:
-    def __init__(self, gain, cursor_r=5, color=WHITE):
+    def __init__(self, gain, cursor_r=5, color=WHITE, calibration=None):
 
         self.x_center, self.y_center = get_center_of_display()
         self.x = self.x_center
@@ -245,7 +245,7 @@ class Cursor:
         self.gain = gain
         self.mpu6050 = MPU6050()
 
-        x_rotation, y_rotation, accel_zout, x_gyro, y_gyro = self.mpu6050.read_data()
+        x_rotation, y_rotation, x_gyro, y_gyro = calibration
         self.angle_x_filtre = x_rotation
         self.angle_y_filtre = y_rotation
         self.gyro_offset_x = x_gyro

@@ -41,24 +41,24 @@ class BalanceBoardGame(tk.Frame):
         self.button_g2.place(x=self.mw_center - self.button_g2.winfo_width()//2, y=175)
 
     def run_calibration(self):
-        if False:
-            from calibration import run_calibration
-            self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
+        from calibration import run_calibration
+        #self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
+        self.calibration = run_calibration()
         self.activate_widget(self.button_g0)
         self.activate_widget(self.button_g1)
         self.activate_widget(self.button_g2)
 
-    def run_game_0(self):
+    def run_game_0(self,):
         from level_0 import level_0
-        level_0(self.path_to_data)
+        level_0(self.path_to_data, self.calibration)
 
     def run_game_1(self):
         from level_1 import level_1
-        level_1(self.path_to_data)
+        level_1(self.path_to_data, self.calibration)
 
     def run_game_2(self):
         from level_2 import level_2
-        level_2(self.path_to_data)
+        level_2(self.path_to_data, self.calibration)
 
     def create_participant_folder_and_enable_calibration(self):
         """Create participant data folder if it does not already exist."""

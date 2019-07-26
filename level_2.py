@@ -9,7 +9,7 @@ from BalanceBoard import Timer, EmptyCircle, Text, Cursor, DataFile, \
                          plot_session_graphs, display_congrats, \
                          point_inside_polygon, Course, DistanceLine, get_center_of_display
 
-def level_2(path_to_data_folder):
+def level_2(path_to_data_folder, calibration):
     # Init top window in full screen.
     pygame.init()
     display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -51,7 +51,7 @@ def level_2(path_to_data_folder):
     text_lvl.change_text(str(sublvl_index))
 
     # Start coordinates of MPU6050.
-    cursor = Cursor(GAIN_OF_MPU6050) #Mouse(GAIN_OF_MPU6050)
+    cursor = Cursor(GAIN_OF_MPU6050, calibration=calibration) 
 
     # Initialize mesures file.
     data = DataFile(path_to_data_folder, game_id=2)
