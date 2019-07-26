@@ -261,24 +261,18 @@ class Cursor:
     def update_position(self,):
         self.trail.append((self.x, self.y))
         x_rotation, y_rotation, _, x_gyro, y_gyro = self.mpu6050.read_data()
-
-        # Apply calibration 
-        x_rotation -= self.calibration[0]
-        y_rotation -= self.calibration[1]
-        x_gyro -= self.calibration[2]
-        y_gyro -= self.calibration[3]
         
         self.x_rotation = x_rotation
         self.y_rotation = y_rotation
         
-        gyro_x_delta = self.dt*(x_gyro - self.gyro_offset_x)
-        gyro_y_delta = self.dt*(y_gyro - self.gyro_offset_y)
+        gyro_x_delta = self.dt*(x_gyro - self.calibration[2] - self.gyro_offset_x)
+        gyro_y_delta = self.dt*(y_gyro - self.calibration[3] - self.gyro_offset_y)
 
         self.gyro_total_x += gyro_x_delta
         self.gyro_total_y += gyro_y_delta
         
-        self.angle_x_filtre = self.K * (self.angle_x_filtre + gyro_x_delta) + (self.K1 * x_rotation)
-        self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation)
+        self.angle_x_filtre = self.K * (self.angle_x_filtre + gyro_x_delta) + (self.K1 * (x_rotation - self.calibration[0]))
+        self.angle_y_filtre = self.K * (self.angle_y_filtre + gyro_y_delta) + (self.K1 * y_rotation - self.calibration[1])
         
         # Updating pixel values and averaging with previous value (smoother).
         #self.x = int((self.x + self.x_center + self.gain * self.angle_x_filtre)//2)
