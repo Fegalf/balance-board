@@ -316,7 +316,7 @@ class DataFile:
         participant_id = os.path.basename(os.path.normpath(path_to_data_folder))
         date = datetime.date.today().strftime("%Y%m%d")
         time = datetime.datetime.today().strftime("%H%M%S")
-        
+        print(date, time)
         self.path_to_csv_file = path_to_data_folder + r"/{}_jeu{}_{}_{}h_{}m_{}s.csv".format(participant_id,
                                                                                             game_id,
                                                                                             date,
