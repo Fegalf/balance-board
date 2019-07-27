@@ -120,5 +120,5 @@ def level_1(path_to_data_folder, calibration):
             time.sleep(pause)
 
     # Plots of various measures.
-    #plot_session_graphs(data.path_to_csv_file)
+    plot_session_graphs(data.path_to_csv_file)
     pygame.quit()
