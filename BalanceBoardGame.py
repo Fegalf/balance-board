@@ -15,6 +15,9 @@ class BalanceBoardGame(tk.Frame):
         self.path_to_data = None
         self.participant = None
 
+    def destroy(self):
+        return super().destroy()
+
     def create_widgets(self):
         label_participant = tk.Label(self.mw, text="Participant :")
         label_participant.place(x=20, y=18)
