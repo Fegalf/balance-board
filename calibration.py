@@ -10,7 +10,6 @@ def run_calibration():
     timeCt = 0.5 # à tester
 
     def mesure_offset_gyro():
-        dt = 0.01
         gyro_total_x = 0
         gyro_total_y = 0
         next_t = time.time()
