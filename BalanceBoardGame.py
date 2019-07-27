@@ -2,7 +2,7 @@
 import tkinter as tk
 import multiprocessing as mp 
 import pygame
-from calibration2 import run_calibration
+from calibration import run_calibration
 import os 
 
 class BalanceBoardGame(tk.Frame):

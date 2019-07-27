@@ -139,77 +139,6 @@ class Course:
     def update_colors(self, start_circle_color):
         self.start_circle.update_color(start_circle_color)
 
-
-"""
-class Course_old:
-    #TODO: REMOVE
-    def __init__(self, angle_in_degrees, length,
-                 start_circle_r, end_circle_r, duration_in_seconds=3,
-                 start_circle_color=ORANGE, end_circle_color=ORANGE,
-                 course_color=ORANGE):
-
-        self.x_center, self.y_center = get_center_of_display()
-        self.length = length
-        self.timer = Timer(duration_in_seconds)
-        self.angle_in_rads = np.radians(-angle_in_degrees)
-
-        # colors
-        self.course_color = course_color
-        self.start_circle_color = start_circle_color
-        self.end_circle_color = end_circle_color
-
-        x_end = int(self.x_center + length * np.cos(self.angle_in_rads))
-        y_end = int(self.y_center + length * np.sin(self.angle_in_rads))
-
-        self.start_circle = FilledCircle(self.x_center, self.y_center, start_circle_r, self.start_circle_color)
-        self.end_circle = FilledCircle(x_end, y_end, end_circle_r, self.end_circle_color)
-        self.polygon = Polygon(self._compute_polygon_points(self.x_center, self.y_center), self.course_color)
-
-    def _compute_polygon_points(self, x_center, y_center):
-        points = []
-
-        sin = np.sin(self.angle_in_rads)
-        cos = np.cos(self.angle_in_rads)
-        sin0 = np.sin(self.angle_in_rads - np.pi/2)
-        cos0 = np.cos(self.angle_in_rads - np.pi/2)
-
-        p0_x = int(x_center + self.start_circle.R * cos0)
-        p0_y = int(y_center + self.start_circle.R * sin0)
-        points.append((p0_x, p0_y))
-
-        p1_x = int(x_center - self.start_circle.R * cos0)
-        p1_y = int(y_center - self.start_circle.R * sin0)
-        points.append((p1_x, p1_y))
-
-        p2_x = int(x_center + self.length * cos - self.end_circle.R * sin)
-        p2_y = int(y_center + self.length * sin + self.end_circle.R * cos)
-        points.append((p2_x, p2_y))
-
-        p3_x = int(x_center + self.length * cos + self.end_circle.R * sin)
-        p3_y = int(y_center + self.length * sin - self.end_circle.R * cos)
-        points.append((p3_x, p3_y))
-        return points
-
-    def cursor_inside_end_circle(self, cursor):
-        return self.end_circle.cursor_is_inside(cursor)
-
-    def cursor_inside_start_circle(self, cursor):
-        return self.start_circle.cursor_is_inside(cursor)
-
-    def cursor_inside_trail(self, cursor):
-        return self.polygon.cursor_is_inside(cursor)
-
-    def draw(self, display):
-        self.polygon.draw(display)
-        self.start_circle.draw(display)
-        self.end_circle.draw(display)
-
-    def update_colors(self, start_circle_color, course_color, end_circle_color):
-        self.start_circle.update_color(start_circle_color)
-        self.polygon.update_color(course_color)
-        self.end_circle.update_color(end_circle_color)
-"""
-
 class Text:
     def __init__(self, text, x, y, color=WHITE):
         self.x = x
@@ -332,7 +261,7 @@ class DataFile:
                                                                                             time[4:])
         self.f = open(self.path_to_csv_file, 'w')
         self.f.write("{0:}, {1:}, {2:}, {3:}, {4:}, "
-                     "{5:}, {6:}, {7:}\n".format('time', 'niveau',
+                     "{5:}, {6:}, {7:}, {8:}\n".format('time', 'niveau', 'sous-niveau',
                                                    'x_rotation',
                                                    'y_rotation',
                                                    'gyro_total_x',
@@ -343,8 +272,8 @@ class DataFile:
     def __exit__(self,):
         self.f.close()
         
-    def record_mpu6050_data(self, t, cursor, level, sublevel):
-        self.f.write("{0:10f}, {1:4.1f}, {2:4.1f}, {3:4.1f}, {4:4.1f}, "
+    def record_mpu6050_data(self, t, cursor, level=0, sublevel=0):
+        self.f.write("{0:10f}, {1:4.1f},, {1:4.1f}, {2:4.1f}, {3:4.1f}, {4:4.1f}, "
                       "{5:4.1f}, {6:4.1f}, {7:4.1f}\n".format(t, level, sublevel,
                                                     cursor.x_rotation,
                                                     cursor.y_rotation,

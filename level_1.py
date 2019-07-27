@@ -110,7 +110,7 @@ def level_1(path_to_data_folder, calibration):
         cursor.draw(display)
         
         # Record data. 
-        #data.record_mpu6050_data(t, cursor, difficulty)
+        data.record_mpu6050_data(t, cursor, difficulty)
 
         pygame.display.update()
         

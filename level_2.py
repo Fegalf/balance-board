@@ -149,7 +149,7 @@ def level_2(path_to_data_folder, calibration):
         pause = next_t - (time.time() - t0)
         if (pause>0):
             time.sleep(pause)
-        #data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
+        data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
 
     pygame.quit()
     #plot_session_graphs(data.path_to_csv_file)
