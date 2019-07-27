@@ -85,7 +85,8 @@ class BalanceBoardGame(tk.Frame):
 
 if __name__=="__main__":
     root = tk.Tk()
+    root.protocol("WM_DELETE_WINDOW", root.destroy)
     bbg = BalanceBoardGame(root)
-    bbg.protocol("WM_DELETE_WINDOW", bbg.destroy)
+    
     bbg.mainloop()
     import sys; sys.quit()
