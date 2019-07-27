@@ -66,7 +66,7 @@ def run_calibration():
     # Coordonnées de départ au centre
     x_prec = 0
     y_prec = 0
-    gain = largeur/90 # 90degrés font la pleine largeur d'affichage
+    gain = 10 
 
     now = time.time()
     x_rotation, y_rotation,accel_zout,x_gyro,y_gyro = mpu6050.read_data()
