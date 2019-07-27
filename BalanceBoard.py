@@ -265,14 +265,14 @@ class Cursor: #TODO: Calibration
         # Apply calibration 
         x_rotation -= self.calibration[0]
         y_rotation -= self.calibration[1]
-        #x_gyro -= self.calibration[2]
-        #y_gyro -= self.calibration[3]
+        x_gyro -= self.calibration[2]
+        y_gyro -= self.calibration[3]
         
         self.x_rotation = x_rotation
         self.y_rotation = y_rotation
         
-        gyro_x_delta = self.dt*(x_gyro - self.gyro_offset_x) - self.calibration[2]
-        gyro_y_delta = self.dt*(y_gyro - self.gyro_offset_y) - self.calibration[3] 
+        gyro_x_delta = self.dt*(x_gyro - self.gyro_offset_x) 
+        gyro_y_delta = self.dt*(y_gyro - self.gyro_offset_y) 
 
         self.gyro_total_x += gyro_x_delta 
         self.gyro_total_y += gyro_y_delta 
