@@ -230,7 +230,7 @@ class Text:
         self.change_text("")
 
 
-class Cursor:
+class Cursor: #TODO: Calibration
     def __init__(self, gain, cursor_r=5, color=WHITE, calibration=None):
 
         self.x_center, self.y_center = get_center_of_display()
@@ -265,8 +265,8 @@ class Cursor:
         # Apply calibration 
         x_rotation -= self.calibration[0]
         y_rotation -= self.calibration[1]
-        #x_gyro -= self.calibration[2]
-        #y_gyro -= self.calibration[3]
+        x_gyro -= self.calibration[2]
+        y_gyro -= self.calibration[3]
         
         self.x_rotation = x_rotation
         self.y_rotation = y_rotation
@@ -463,32 +463,6 @@ def plot_session_graphs(path_to_file):
         distanceDuNiveau.append(np.sum(np.sqrt(np.square(np.diff(angleX[niveau==ii])) + np.square(np.diff(angleY[niveau==ii])))))
         print("Niveau {:d}: de {:4.1f} à {:4.1f}sec., soit une durée de {:4.1f}sec. avec rayon moyen de {:4.1f} et distance parcourue de {:4.1f}".format(ii,debut,fin,dureeDuNiveau[ii-1],rayonMoyenDuNiveau[ii-1],distanceDuNiveau[ii-1]))
 
-    # On produit les graphiques
-#    plt.figure(1)  
-#    plt.subplot(221)
-#    plt.plot(temps, angleX)
-#    plt.xlabel('time [sec]')
-#    plt.ylabel('angle X [deg]')
-#    plt.grid(True)
-#    plt.subplot(222)
-#    plt.hist(angleX, 50, density=1, facecolor='g', alpha=0.75)
-#    plt.xlabel('angle X [deg]')
-#    plt.title("$\mu_x$={0:4.1f}$^\circ$, $\sigma_x$={1:4.1f}$^\circ$".format(np.mean(angleX), np.std(angleX)))
-#    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-#    plt.grid(True)
-#    plt.subplot(223)
-#    plt.plot(temps,angleY)
-#    plt.xlabel('time [sec]')
-#    plt.ylabel('angle Y [deg]')
-#    plt.grid(True)
-#    plt.subplot(224)
-#    plt.hist(angleY, 50, density=1, facecolor='g', alpha=0.75)
-#    plt.xlabel('angle Y [deg]')
-#    #plt.text(60, .025, r'$\mu=100,\ \sigma=15$')
-#    plt.title("$\mu_y$={0:4.1f}$^\circ$, $\sigma_y$={1:4.1f}$^\circ$".format(np.mean(angleY),np.std(angleY)))
-#    plt.grid(True)
-#    plt.savefig('angleVSaxe.png')
-#    #plt.show()
 
     plt.figure(1)
     #total = 0
@@ -553,35 +527,6 @@ def plot_session_graphs(path_to_file):
     plt.grid(True)
     plt.tight_layout()
     plt.savefig('angleVSaxeY.png')
-
-
-
-#    plt.figure(2)
-#    plt.subplot(211)
-#    plt.plot(temps, angleX, temps, gyroX, temps, accX)
-#    plt.xlabel('time [sec]')
-#    plt.ylabel('angle X [deg]')
-#    plt.grid(True)
-#    plt.title('Les angles')
-#    plt.subplot(212)
-#    plt.plot(temps, angleY, temps, gyroY, temps, accY)
-#    plt.xlabel('time [sec]')
-#    plt.ylabel('angle Y [deg]')
-#    plt.grid(True)
-#    plt.show()
-    
-#    
-#plt.figure(2)
-#plt.scatter(angleX, np.negative(angleY), s=np.pi*7, c='red', alpha=0.1)
-#plt.ylim([-30, 30])
-#plt.xlim([-30, 30])
-#plt.grid()
-#plt.plot([-30,30],[0,0], linewidth=1, color='black' )
-#plt.plot([0,0], [-30,30], linewidth=1, color='black')
-#plt.title('General Heat Map')
-#plt.xlabel('Position X')
-#plt.ylabel('Position Y')
-
     
     cellHeight = 6
     cellWidth = 25
