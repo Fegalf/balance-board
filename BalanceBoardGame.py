@@ -87,6 +87,6 @@ if __name__=="__main__":
     root = tk.Tk()
     bbg = BalanceBoardGame(root)
     bbg.mainloop()
-    root.destroy()
+    bbg.destroy()
     pygame.quit()
     import sys; sys.quit()
