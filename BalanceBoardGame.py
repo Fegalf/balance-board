@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import tkinter as tk
 import multiprocessing as mp 
+import pygame
 from calibration import run_calibration
 import os 
 
