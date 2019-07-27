@@ -9,6 +9,8 @@ class BalanceBoardGame(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.mw = master
+        self.mw.protocol("WM_DELETE_WINDOW", self.mw.destroy)
+
         self.mw.title("Balance Board Game")
         self.mw.geometry("340x220")
         self.mw.resizable(0, 0)
@@ -86,7 +88,6 @@ class BalanceBoardGame(tk.Frame):
 
 if __name__=="__main__":
     root = tk.Tk()
-    root.protocol("WM_DELETE_WINDOW", root.destroy)
     bbg = BalanceBoardGame(root)
     bbg.mainloop()
     import sys; sys.quit()
