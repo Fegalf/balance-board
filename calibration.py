@@ -28,7 +28,7 @@ def run_calibration():
         gyro_offset_y = gyro_total_y
         return gyro_offset_x, gyro_offset_y 
 
-    K = 0.98
+    K = 0.97
     K1 = 1 - K
 
     #Dessin de la zone graphique
