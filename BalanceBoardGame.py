@@ -14,6 +14,9 @@ class BalanceBoardGame(tk.Frame):
         self.create_widgets()
         self.path_to_data = None
         self.participant = None
+    
+    def destroy(self):
+        del self
 
     def create_widgets(self):
         label_participant = tk.Label(self.mw, text="Participant :")
@@ -87,6 +90,5 @@ if __name__=="__main__":
     root = tk.Tk()
     root.protocol("WM_DELETE_WINDOW", root.destroy)
     bbg = BalanceBoardGame(root)
-    
     bbg.mainloop()
     import sys; sys.quit()
