@@ -52,14 +52,17 @@ class BalanceBoardGame(tk.Frame):
     def run_game_0(self,):
         from level_0 import level_0
         level_0(self.path_to_data, self.calibration)
-
+        pygame.quit()
+    
     def run_game_1(self):
         from level_1 import level_1
         level_1(self.path_to_data, self.calibration)
+        pygame.quit()
 
     def run_game_2(self):
         from level_2 import level_2
         level_2(self.path_to_data, self.calibration)
+        pygame.quit()
 
     def create_participant_folder_and_enable_calibration(self):
         """Create participant data folder if it does not already exist."""
@@ -84,5 +87,6 @@ if __name__=="__main__":
     root = tk.Tk()
     bbg = BalanceBoardGame(root)
     bbg.mainloop()
+    root.destroy()
     pygame.quit()
     import sys; sys.quit()
