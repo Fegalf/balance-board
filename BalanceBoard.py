@@ -183,7 +183,7 @@ class Cursor: #TODO: Calibration
         self.gyro_total_x = self.angle_x_filtre - self.gyro_offset_x
         self.gyro_total_y = self.angle_y_filtre - self.gyro_offset_y
 
-        self.dt = 0.023
+        self.dt = 0.01
         self.K = 0.97  # etait 0.945
         self.K1 = 1 - self.K
 

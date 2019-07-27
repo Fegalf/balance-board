@@ -6,7 +6,7 @@ from graphics import *
 import numpy as np
 
 def run_calibration():
-    dt = 0.023
+    dt = 0.01
     # Initialize MPU6050 
     mpu6050 = MPU6050()
     nb_mesures = 0
