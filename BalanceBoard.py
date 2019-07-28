@@ -340,7 +340,7 @@ def point_inside_polygon(x, y, poly, include_edges=True):
     return inside
 
 
-def plot_session_graphs(path_to_file):
+def plot_session_graphs(path_to_file, game_id):
     path_to_data_directory = os.path.dirname(path_to_file)
     fichierData = open(path_to_file, 'r')
     temps = []
@@ -411,7 +411,7 @@ def plot_session_graphs(path_to_file):
     plt.xlabel('Degrés horizontals')
     plt.ylabel('Degrés verticals')
     plt.colorbar()
-    plt.savefig(os.path.join(path_to_data_directory, 'heatMap.png'))
+    plt.savefig(os.path.join(path_to_data_directory, '{}_heatMap.png'.format(game_id)))
     #plt.show()
 
     plt.figure(2,figsize=(8,3))  
@@ -427,7 +427,7 @@ def plot_session_graphs(path_to_file):
     plt.title("$\mu_t$={0:4.1f}$^\circ$, $\sigma_t$={1:4.1f}$^\circ$".format(np.mean(angleTotal), np.std(angleTotal)))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(os.path.join(path_to_data_directory, 'angleVSaxe.png'))
+    plt.savefig(os.path.join(path_to_data_directory, '{}_angleVSaxe.png'.format(game_id)))
     
     plt.figure(3,figsize=(8,3))  
     plt.subplot(121)
@@ -442,7 +442,7 @@ def plot_session_graphs(path_to_file):
     plt.title("$\mu_x$={0:4.1f}$^\circ$, $\sigma_x$={1:4.1f}$^\circ$".format(np.mean(angleX), np.std(angleX)))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(os.path.join(path_to_data_directory, 'angleVSaxeX.png'))
+    plt.savefig(os.path.join(path_to_data_directory, '{}_angleVSaxeX.png'.format(game_id)))
     
     plt.figure(4,figsize=(8,3))
     plt.subplot(121)
@@ -457,7 +457,7 @@ def plot_session_graphs(path_to_file):
     plt.title("$\mu_y$={0:4.1f}$^\circ$, $\sigma_y$={1:4.1f}$^\circ$".format(np.mean(angleY),np.std(angleY)))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(os.path.join(path_to_data_directory, 'angleVSaxeY.png'))
+    plt.savefig(os.path.join(path_to_data_directory, '{}_angleVSaxeY.png'.format(game_id)))
     
     cellHeight = 6
     cellWidth = 25
@@ -486,18 +486,18 @@ def plot_session_graphs(path_to_file):
     pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(meandist), 1, 2, 'C')
 
     pdf.set_xy(4*cellWidth+12, 20)
-    pdf.image(os.path.join(path_to_data_directory, 'heatMap.png'), x = None, y = None, w = 105, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, '{}_heatMap.png'.format(game_id)), x = None, y = None, w = 105, h = 0, type = '', link = '')
 
     basDuTableau = (max(niveau)+3)*cellHeight + 35
     pdf.set_xy(18, basDuTableau)
-    pdf.image(os.path.join(path_to_data_directory, 'angleVSaxe.png'), x = None, y = None, w = 150, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, '{}_angleVSaxe.png'.format(game_id)), x = None, y = None, w = 150, h = 0, type = '', link = '')
 
     pdf.set_xy(18, basDuTableau+55)
-    pdf.image(os.path.join(path_to_data_directory, 'angleVSaxeX.png'), x = None, y = None, w = 150, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, '{}_angleVSaxeX.png'.format(game_id)), x = None, y = None, w = 150, h = 0, type = '', link = '')
 
     pdf.set_xy(18, basDuTableau+2*55)
-    pdf.image(os.path.join(path_to_data_directory, 'angleVSaxeY.png'), x = None, y = None, w = 150, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, '{}_angleVSaxeY.png'.format(game_id)), x = None, y = None, w = 150, h = 0, type = '', link = '')
 
-    pdf.output(os.path.join(path_to_data_directory, 'rapport.pdf'), 'F')
+    pdf.output(os.path.join(path_to_data_directory, '{}_rapport.pdf'.format(game_id)), 'F')
     
     #plt.show()
