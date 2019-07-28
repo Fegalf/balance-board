@@ -74,7 +74,8 @@ class BalanceBoardGame(tk.Frame):
             self.activate_widget(self.button_calibration)
             try:
                 os.mkdir(self.path_to_data)
-
+                for i in range(3):
+                    os.mkdir(os.path.join(self.path_to_data, 'jeu{}'.format(i)))
             except FileExistsError:
                 pass
 
