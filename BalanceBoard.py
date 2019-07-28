@@ -465,7 +465,7 @@ def plot_session_graphs(path_to_file):
     pdf.add_page()
     pdf.set_xy(0, 0)
     pdf.set_font('arial', 'B', 12)
-    pdf.multi_cell(0, 8, 'Sommaire des résultats pour\n'+path_to_file, 0, 'C')
+    pdf.multi_cell(0, 8, 'Sommaire des résultats pour\n' + os.path.basename(path_to_file), 0, 'C')
     pdf.cell(0,10,' ', 0, 1)
     pdf.cell(cellWidth, cellHeight, 'Niveau', 1, 0, 'C')
     pdf.cell(cellWidth, cellHeight, 'Durée', 1, 0, 'C')
@@ -500,4 +500,4 @@ def plot_session_graphs(path_to_file):
 
     pdf.output(os.path.join(path_to_data_directory, 'rapport.pdf'), 'F')
     
-    plt.show()
+    #plt.show()
