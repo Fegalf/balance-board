@@ -393,7 +393,7 @@ def plot_session_graphs(path_to_file, game_id):
         rayonMoyenDuNiveau.append(np.mean(rayon))
         distanceDuNiveau.append(np.sum(np.sqrt(np.square(np.diff(angleX[niveau==ii])) + np.square(np.diff(angleY[niveau==ii])))))
         print("Niveau {:d}: de {:4.1f} à {:4.1f}sec., soit une durée de {:4.1f}sec. avec rayon moyen de {:4.1f} et distance parcourue de {:4.1f}".format(ii,debut,fin,dureeDuNiveau[ii-1],rayonMoyenDuNiveau[ii-1],distanceDuNiveau[ii-1]))
-
+        print("Génération du rapport PDF en cours...")
 
     plt.figure(1)
     #total = 0
