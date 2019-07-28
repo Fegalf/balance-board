@@ -341,9 +341,11 @@ def point_inside_polygon(x, y, poly, include_edges=True):
 
 
 def plot_session_graphs(path_to_file):
+    path_to_data_directory = os.path.dirname(path_to_file)
     fichierData = open(path_to_file, 'r')
     temps = []
     niveau = []
+    sous_niveau = []
     angleX = []
     angleY = []
     accX = []
@@ -358,18 +360,20 @@ def plot_session_graphs(path_to_file):
         ledata = [float(y) for y in x.split(', ')]
         temps.append(ledata[0])
         niveau.append(ledata[1])
-        accX.append(ledata[2])
-        accY.append(ledata[3])
-        gyroX.append(ledata[4])
-        gyroY.append(ledata[5])
-        angleX.append(ledata[6])
-        angleY.append(ledata[7])
+        sous_niveau.append(ledata[2])
+        accX.append(ledata[3])
+        accY.append(ledata[4])
+        gyroX.append(ledata[5])
+        gyroY.append(ledata[6])
+        angleX.append(ledata[7])
+        angleY.append(ledata[8])
 
     fichierData.close()
 
     # on fait les statistiques
     temps = np.array(temps)
     niveau = (np.array(niveau)).astype(int)
+    sous_niveau = (np.array(niveau)).astype(int)
     angleX = np.array(angleX)
     angleY = np.array(angleY)
     dureeDuNiveau = []
@@ -378,8 +382,6 @@ def plot_session_graphs(path_to_file):
     meandist = np.mean(angleTotal)
     distanceDuNiveau = []
  
-
-    
     print('Le fichier contient {:d} lignes de data'.format(int(angleX.size+1)))
     print("Niveaux de {:d} à {:d}".format(min(niveau),max(niveau)))
     
@@ -387,7 +389,7 @@ def plot_session_graphs(path_to_file):
         debut = min(temps[niveau==ii])
         fin = max(temps[niveau==ii])
         dureeDuNiveau.append(fin-debut)
-        rayon = np.sqrt(np.square(angleX[niveau==ii])+np.square(angleY[niveau==ii]))
+        rayon = np.sqrt(np.square(angleX[niveau==ii]) + np.square(angleY[niveau==ii]))
         rayonMoyenDuNiveau.append(np.mean(rayon))
         distanceDuNiveau.append(np.sum(np.sqrt(np.square(np.diff(angleX[niveau==ii])) + np.square(np.diff(angleY[niveau==ii])))))
         print("Niveau {:d}: de {:4.1f} à {:4.1f}sec., soit une durée de {:4.1f}sec. avec rayon moyen de {:4.1f} et distance parcourue de {:4.1f}".format(ii,debut,fin,dureeDuNiveau[ii-1],rayonMoyenDuNiveau[ii-1],distanceDuNiveau[ii-1]))
@@ -409,7 +411,7 @@ def plot_session_graphs(path_to_file):
     plt.xlabel('Degrés horizontals')
     plt.ylabel('Degrés verticals')
     plt.colorbar()
-    plt.savefig('heatMap.png')
+    plt.savefig(os.path.join(path_to_data_directory, 'heatMap.png'))
     #plt.show()
 
     plt.figure(2,figsize=(8,3))  
@@ -425,7 +427,7 @@ def plot_session_graphs(path_to_file):
     plt.title("$\mu_t$={0:4.1f}$^\circ$, $\sigma_t$={1:4.1f}$^\circ$".format(np.mean(angleTotal), np.std(angleTotal)))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('angleVSaxe.png')
+    plt.savefig(os.path.join(path_to_data_directory, 'angleVSaxe.png'))
     
     plt.figure(3,figsize=(8,3))  
     plt.subplot(121)
@@ -440,7 +442,7 @@ def plot_session_graphs(path_to_file):
     plt.title("$\mu_x$={0:4.1f}$^\circ$, $\sigma_x$={1:4.1f}$^\circ$".format(np.mean(angleX), np.std(angleX)))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('angleVSaxeX.png')
+    plt.savefig(os.path.join(path_to_data_directory, 'angleVSaxeX.png'))
     
     plt.figure(4,figsize=(8,3))
     plt.subplot(121)
@@ -455,7 +457,7 @@ def plot_session_graphs(path_to_file):
     plt.title("$\mu_y$={0:4.1f}$^\circ$, $\sigma_y$={1:4.1f}$^\circ$".format(np.mean(angleY),np.std(angleY)))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('angleVSaxeY.png')
+    plt.savefig(os.path.join(path_to_data_directory, 'angleVSaxeY.png'))
     
     cellHeight = 6
     cellWidth = 25
@@ -484,18 +486,18 @@ def plot_session_graphs(path_to_file):
     pdf.cell(cellWidth, cellHeight, '{:4.1f}'.format(meandist), 1, 2, 'C')
 
     pdf.set_xy(4*cellWidth+12, 20)
-    pdf.image('heatMap.png', x = None, y = None, w = 105, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, 'heatMap.png'), x = None, y = None, w = 105, h = 0, type = '', link = '')
 
     basDuTableau = (max(niveau)+3)*cellHeight + 35
     pdf.set_xy(18, basDuTableau)
-    pdf.image('angleVSaxe.png', x = None, y = None, w = 150, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, 'angleVSaxe.png'), x = None, y = None, w = 150, h = 0, type = '', link = '')
 
     pdf.set_xy(18, basDuTableau+55)
-    pdf.image('angleVSaxeX.png', x = None, y = None, w = 150, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, 'angleVSaxeX.png'), x = None, y = None, w = 150, h = 0, type = '', link = '')
 
     pdf.set_xy(18, basDuTableau+2*55)
-    pdf.image('angleVSaxeY.png', x = None, y = None, w = 150, h = 0, type = '', link = '')
+    pdf.image(os.path.join(path_to_data_directory, 'angleVSaxeY.png'), x = None, y = None, w = 150, h = 0, type = '', link = '')
 
-    pdf.output(path_to_file+'-rapport.pdf', 'F')
+    pdf.output(os.path.join(path_to_data_directory, 'rapport.pdf'), 'F')
     
     plt.show()
