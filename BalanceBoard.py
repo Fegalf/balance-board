@@ -253,12 +253,12 @@ class DataFile:
         participant_id = os.path.basename(os.path.normpath(path_to_data_folder))
         date = datetime.date.today().strftime("%Y%m%d")
         time = datetime.datetime.today().strftime("%H%M%S")
-        self.path_to_csv_file = path_to_data_folder + r"/{}_jeu{}_{}_{}h_{}m_{}s.csv".format(participant_id,
+        self.path_to_csv_file = os.path.join(path_to_data_folder, "jeu{}".format(game_id) ,"{}_jeu{}_{}_{}h_{}m_{}s.csv".format(participant_id,
                                                                                             game_id,
                                                                                             date,
                                                                                             time[:2],
                                                                                             time[2:4],
-                                                                                            time[4:])
+                                                                                            time[4:]))
         self.f = open(self.path_to_csv_file, 'w')
         self.f.write("{0:}, {1:}, {2:}, {3:}, {4:}, "
                      "{5:}, {6:}, {7:}, {8:}\n".format('time', 'niveau', 'sous-niveau',
