@@ -499,5 +499,5 @@ def plot_session_graphs(path_to_file, game_id):
     pdf.image(os.path.join(path_to_data_directory, 'jeu{}'.format(game_id), 'angleVSaxeY.png'), x = None, y = None, w = 150, h = 0, type = '', link = '')
 
     pdf.output(os.path.join(path_to_data_directory, 'jeu{}'.format(game_id), 'rapport.pdf'), 'F')
-    
+    print('Génération du rapport terminée.')
     #plt.show()
