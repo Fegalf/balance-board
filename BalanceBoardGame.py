@@ -45,8 +45,6 @@ class BalanceBoardGame(tk.Frame):
         self.button_g2.place(x=self.mw_center - self.button_g2.winfo_width()//2, y=175)
 
     def run_calibration(self):
-        
-        #self.rotation_offset_x, self.rotation_offset_y, self.gyro_offset_x, self.gyro_offset_y = run_calibration()
         self.calibration = run_calibration()
         self.activate_widget(self.button_g0)
         self.activate_widget(self.button_g1)
