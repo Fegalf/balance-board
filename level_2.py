@@ -152,6 +152,7 @@ def level_2(path_to_data_folder, calibration):
                 timer.reset()
         else:
             timer.reset()
+            text_acq.draw(display, x_center//2, 40)
 
         # Draw text.
         display.fill(bg_color)
@@ -169,8 +170,6 @@ def level_2(path_to_data_folder, calibration):
             time.sleep(pause)
         if acquisition_started:
             data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
-        else:
-            text_acq.draw(display, x_center//2, 40)
 
     pygame.quit()
     #plot_session_graphs(data.path_to_csv_file, game_id=2)
