@@ -83,13 +83,7 @@ class FilledCircle(EmptyCircle):
 
     def draw(self, display):
         pygame.gfxdraw.filled_circle(display, self.x, self.y, self.R, self.color)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R+1, BLACK)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R+2, BLACK)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R+3, BLACK)
-
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R, BLACK)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-1, BLACK)
-        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-2, BLACK)
+        pygame.draw.circle(display, self.color, (self.x, self.y), self.R, 6)
 
     def update_color(self, new_color):
         self.color = new_color
