@@ -15,7 +15,7 @@ def level_0(path_to_data_folder, calibration):
 
     # Init top window in full screen.
     pygame.init()
-    display = pygame.display.set_mode((0, 0)) #, pygame.FULLSCREEN)
+    display = pygame.display.set_mode((0, 0)), pygame.FULLSCREEN)
     pygame.display.set_caption("Balance Board")
 
     # Get width and height of display.

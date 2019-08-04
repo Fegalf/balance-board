@@ -20,6 +20,7 @@ def run_calibration():
     while (t<3):
         t = time.time()-now
         x_rotation, y_rotation,_,x_gyro,y_gyro = mpu6050.read_data()
+        print(x_rotation, y_rotation,_,x_gyro,y_gyro )
 
         nb_mesures += 1
         accumul_x += x_rotation
