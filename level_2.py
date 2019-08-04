@@ -152,13 +152,15 @@ def level_2(path_to_data_folder, calibration):
                 timer.reset()
         else:
             timer.reset()
-            text_acq.draw(display, x_center//2, 40)
+            
 
         # Draw text.
         display.fill(bg_color)
         text_timer.draw(display, 100, 75)
         text_lvl.draw(display, 25, height-70)
-
+        if not acquisition_started:
+            text_acq.draw(display, x_center//2, 40)
+            
         # Get position of the cursor and draw a red circle on it.
         course.draw(display)
         cursor.draw(display)
