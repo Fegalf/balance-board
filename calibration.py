@@ -6,18 +6,11 @@ from graphics import *
 import numpy as np
 
 def run_calibration():
-    dt = 0.023
-    # Initialize MPU6050 
     mpu6050 = MPU6050()
-    nb_mesures = 0
-    accumul_x = 0
-    accumul_y = 0
-    accumul_gyrox = 0
-    accumul_gyroy = 0
     now = time.time()
     t = 0
-
     data = []
+    
     while (t<1):
         t = time.time()-now
         x_rotation, y_rotation, _, x_gyro,y_gyro = mpu6050.read_data()
