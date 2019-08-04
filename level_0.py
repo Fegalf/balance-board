@@ -64,7 +64,7 @@ def level_0(path_to_data_folder, calibration):
         
         if not acquisition_started:
             small_circle.draw(display)
-            text_acq.draw(display)
+            text_acq.draw(display, x_center, 40)
 
         # Draw cursor.
         cursor.draw(display)

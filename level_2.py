@@ -15,8 +15,11 @@ def level_2(path_to_data_folder, calibration):
     display = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption("Balance Board")
 
-    # Find height of display.
-    height = pygame.display.get_surface().get_size()[1]
+    # Get width and height of display.
+    size_x, height = pygame.display.get_surface().get_size()
+
+    # Find center of display.
+    x_center, y_center = (size_x//2, height//2)
 
     ############################## LEVELS PARAMETERS ##############################
 
