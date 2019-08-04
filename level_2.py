@@ -109,7 +109,9 @@ def level_2(path_to_data_folder, calibration):
                     run = False
                 if (event.key == pygame.K_SPACE) or (event.key == pygame.K_RETURN):
                     if not acquisition_started:
-                        t0 = t
+                        t0 = time.time()
+                        t = 0
+                        next_t = 0
                     acquisition_started = True
 
         if course.cursor_inside_start_circle(cursor):

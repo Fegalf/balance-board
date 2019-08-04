@@ -60,7 +60,7 @@ def level_0(path_to_data_folder, calibration):
                     if not acquisition_started:
                             t0 = time.time()
                             t = 0
-                            next_t = dt
+                            next_t = 0
                     acquisition_started = True
                     
 
