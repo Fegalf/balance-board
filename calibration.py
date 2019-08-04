@@ -18,7 +18,7 @@ def run_calibration():
     t = 0
 
     data = []
-    while (t<3):
+    while (t<1):
         t = time.time()-now
         x_rotation, y_rotation, _, x_gyro,y_gyro = mpu6050.read_data()
         data.append([x_rotation, y_rotation, x_gyro, y_gyro])

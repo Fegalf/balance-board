@@ -194,7 +194,7 @@ class Cursor: #TODO: Calibration
         # Apply calibration 
         x_rotation -= self.calibration[0]
         y_rotation -= self.calibration[1]
-        x_gyro -= self.calibration[2]
+        x_gyro -= self.calibration[2]/2
         y_gyro += self.calibration[3]
         
         self.x_rotation = x_rotation
