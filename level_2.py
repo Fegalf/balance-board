@@ -96,10 +96,14 @@ def level_2(path_to_data_folder, calibration):
         t = time.time() - t0
         cursor.update_position()
         angle_of_path = SUBLEVELS[sublvl_index][0]
-        d = get_projection_on_path(cursor, angle_of_path)
 
-        if d > max_distance_reached:
-            max_distance_reached = d
+        if acquisition_started:
+            d = get_projection_on_path(cursor, angle_of_path)
+
+            if d > max_distance_reached:
+                max_distance_reached = d
+        else:
+            d = 0
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -146,6 +150,8 @@ def level_2(path_to_data_folder, calibration):
                 new_distance = max_distance_reached
                 course = Course(*SUBLEVELS[sublvl_index], new_distance)
                 timer.reset()
+        else:
+            time.reset()
             
         # Draw text.
         display.fill(bg_color)
