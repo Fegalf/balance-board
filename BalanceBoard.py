@@ -140,7 +140,7 @@ class Course:
         self.start_circle.update_color(start_circle_color)
 
 class Text:
-    def __init__(self, text, x, y, color=WHITE):
+    def __init__(self, text, color=WHITE):
         self.color = color
 
         pygame.font.init()
