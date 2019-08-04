@@ -141,8 +141,6 @@ class Course:
 
 class Text:
     def __init__(self, text, x, y, color=WHITE):
-        self.x = x
-        self.y = y
         self.color = color
 
         pygame.font.init()

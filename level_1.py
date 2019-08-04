@@ -43,7 +43,8 @@ def level_1(path_to_data_folder, calibration):
     cursor = Cursor(GAIN_OF_MPU6050, cursor_r=7, calibration=calibration)
 
     # Font parameters and text initialization.
-    text_timer = Text('', 0, 0)
+    text_timer = Text('')
+    text_acq = Text("Appuyer sur ESPACE pour démarrer l'acquisition")
 
     # Initialize mesures file.
     data = DataFile(path_to_data_folder, game_id=1)
@@ -56,6 +57,7 @@ def level_1(path_to_data_folder, calibration):
     difficulty = 1
     bg_color = RED
     run = True
+    acquisition_started = False
     while run:
         pygame.mouse.set_visible(False)
         #pygame.time.delay(10)
@@ -68,6 +70,8 @@ def level_1(path_to_data_folder, calibration):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                if (event.key == pygame.K_SPACE) or (event.key == pygame.K_RETURN):
+                    acquisition_started = True
 
         # If cursor is outside BIG circle, background is RED.
         # If cursor in inside between SMALL and BIG circles, background is ORANGE. 
@@ -110,8 +114,10 @@ def level_1(path_to_data_folder, calibration):
         cursor.draw(display)
         
         # Record data. 
-        data.record_mpu6050_data(t, cursor, difficulty)
-
+        if acquisition_started:
+            data.record_mpu6050_data(t, cursor, difficulty)
+        else:
+            text_acq.draw(display, x_center, 40)
         pygame.display.update()
         
         next_t = next_t + dt

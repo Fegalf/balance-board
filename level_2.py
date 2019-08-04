@@ -46,9 +46,10 @@ def level_2(path_to_data_folder, calibration):
     course = Course(*SUBLEVELS[sublvl_index], max_distance_reached)
 
     # Font parameters and text initialization.
-    text_timer = Text('', 0, 0)
-    text_lvl = Text('', 0, 0)
+    text_timer = Text('')
+    text_lvl = Text('')
     text_lvl.change_text(str(sublvl_index))
+    text_acq = Text("Appuyer sur ESPACE pour démarrer l'acquisition")
 
     # Start coordinates of MPU6050.
     cursor = Cursor(GAIN_OF_MPU6050, calibration=calibration) 
@@ -69,6 +70,7 @@ def level_2(path_to_data_folder, calibration):
     next_t = dt
     display.fill(bg_color)
     just_finished = False
+    acquisition_started = False
 
     def get_projection_on_path(cursor, angle_of_path):
         x, y = cursor.get_position()
@@ -102,6 +104,8 @@ def level_2(path_to_data_folder, calibration):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                if (event.key == pygame.K_SPACE) or (event.key == pygame.K_RETURN):
+                    acquisition_started = True
 
         if course.cursor_inside_start_circle(cursor):
             bg_color = ORANGE
@@ -149,7 +153,10 @@ def level_2(path_to_data_folder, calibration):
         pause = next_t - (time.time() - t0)
         if (pause>0):
             time.sleep(pause)
-        data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
+        if acquisition_started:
+            data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
+        else:
+            text_acq.draw(display, x_center, 40)
 
     pygame.quit()
     #plot_session_graphs(data.path_to_csv_file, game_id=2)

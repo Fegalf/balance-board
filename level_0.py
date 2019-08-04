@@ -33,6 +33,9 @@ def level_0(path_to_data_folder, calibration):
     # Initialize mesures file.
     data = DataFile(path_to_data_folder, game_id=0)
 
+    # Text for acquisition start.
+    text_acq = Text("Appuyer sur ESPACE pour démarrer l'acquisition")
+
     t0 = time.time()
     dt = 0.023    # a verifier quelle est la frequence d'echantillonage
     next_t = dt
@@ -53,7 +56,7 @@ def level_0(path_to_data_folder, calibration):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
-                if event.key == pygame.K_SPACE:
+                if (event.key == pygame.K_SPACE) or (event.key == pygame.K_RETURN):
                     acquisition_started = True
 
         # Draw background and circles.
@@ -61,6 +64,7 @@ def level_0(path_to_data_folder, calibration):
         
         if not acquisition_started:
             small_circle.draw(display)
+            text_acq.draw(display)
 
         # Draw cursor.
         cursor.draw(display)
@@ -68,6 +72,8 @@ def level_0(path_to_data_folder, calibration):
         # Record data. 
         if acquisition_started:
             data.record_mpu6050_data(t, cursor)
+        else:
+            text_acq.draw(display, x_center, 40)
         pygame.display.update()
         
         next_t = next_t + dt
