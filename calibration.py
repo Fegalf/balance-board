@@ -22,8 +22,7 @@ def run_calibration():
         t = time.time()-now
         x_rotation, y_rotation, _, x_gyro,y_gyro = mpu6050.read_data()
         data.append([x_rotation, y_rotation, x_gyro, y_gyro])
-    print(data)
+
     data = np.array(data)
-    print(data)
     rotation_offset_x, rotation_offset_y, accumul_gyrox, accumul_gyroy = data.mean(axis=0)
     return rotation_offset_x, rotation_offset_y, accumul_gyrox, accumul_gyroy
