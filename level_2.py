@@ -160,10 +160,10 @@ def level_2(path_to_data_folder, calibration):
         text_lvl.draw(display, 25, height-70)
         if not acquisition_started:
             text_acq.draw(display, x_center//2, 40)
-            
+
         # Get position of the cursor and draw a red circle on it.
         course.draw(display)
-        cursor.draw(display)
+        cursor.draw(display, draw_trail=True)
         pygame.display.update()
 
         next_t = next_t + dt

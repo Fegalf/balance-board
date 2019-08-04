@@ -213,10 +213,12 @@ class Cursor: #TODO: Calibration
         self.x = int(self.x_center + self.gain * self.angle_x_filtre)
         self.y = int(self.y_center + self.gain * self.angle_y_filtre)
         
-    def draw(self, display):
+    def draw(self, display, draw_trail=False):
         pygame.draw.circle(display, self.color, self.get_position(), self.cursor_r)
-        for xy in self.trail:
-            pygame.draw.circle(display, self.color, xy, 2)
+
+        if draw_trail:
+            for xy in self.trail:
+                pygame.draw.circle(display, self.color, xy, 2)
         
     def get_position(self,):
         return self.x, self.y
