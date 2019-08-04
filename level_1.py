@@ -107,6 +107,8 @@ def level_1(path_to_data_folder, calibration):
                 new_radius = small_circle_r - int((difficulty / 10) * big_circle_r)
                 small_circle.update_radius(new_radius)
                 timer_10s.reset()
+        else:
+            timer_10s.reset()
 
         # Draw background and circles.
         display.fill(bg_color)
