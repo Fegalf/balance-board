@@ -62,15 +62,15 @@ def level_0(path_to_data_folder, calibration):
         # Draw background and circles.
         display.fill(bg_color)
 
+        if not acquisition_started:
+            small_circle.draw(display)
         # Draw cursor.
         cursor.draw(display)
         
         # Record data. 
         if acquisition_started:
-            
             data.record_mpu6050_data(t, cursor)
         else:
-            small_circle.draw(display)
             text_acq.draw(display, x_center//2, 40)
         pygame.display.update()
         
