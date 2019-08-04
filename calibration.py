@@ -16,27 +16,12 @@ def run_calibration():
     accumul_gyroy = 0
     now = time.time()
     t = 0
-    next_t = 0
+
+    data = np.array()
     while (t<3):
         t = time.time()-now
-        x_rotation, y_rotation,_,x_gyro,y_gyro = mpu6050.read_data()
-        print(x_rotation, y_rotation,_,x_gyro,y_gyro )
+        x_rotation, y_rotation, _, x_gyro,y_gyro = mpu6050.read_data()
+        data = np.append(data, np.array([[x_rotation, y_rotation, x_gyro, y_gyro]]), axis=0)
 
-        nb_mesures += 1
-        accumul_x += x_rotation
-        accumul_y += y_rotation
-        accumul_gyrox += x_gyro
-        accumul_gyroy += y_gyro
-
-        next_t += dt
-        pause = next_t-(time.time()-now)
-        if (pause>0):
-            time.sleep(pause)
-
-
-    rotation_offset_x = accumul_x / nb_mesures
-    rotation_offset_y = accumul_y / nb_mesures
-    accumul_gyrox = accumul_gyrox / nb_mesures
-    accumul_gyroy = accumul_gyroy / nb_mesures
-
+    rotation_offset_x, rotation_offset_y, accumul_gyrox, accumul_gyroy = data.mean(axis=0)
     return rotation_offset_x, rotation_offset_y, accumul_gyrox, accumul_gyroy
