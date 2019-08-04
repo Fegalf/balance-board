@@ -177,4 +177,4 @@ def level_2(path_to_data_folder, calibration):
             data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
 
     pygame.quit()
-    #plot_session_graphs(data.path_to_csv_file, game_id=2)
+    plot_session_graphs(data.path_to_csv_file, game_id=2)

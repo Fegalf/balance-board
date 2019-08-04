@@ -87,5 +87,5 @@ def level_0(path_to_data_folder, calibration):
 
     # Plots of various measures.
     pygame.quit()
-    #plot_session_graphs(data.path_to_csv_file, game_id=0)
+    plot_session_graphs(data.path_to_csv_file, game_id=0)
     
