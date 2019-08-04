@@ -117,7 +117,7 @@ def level_1(path_to_data_folder, calibration):
         if acquisition_started:
             data.record_mpu6050_data(t, cursor, difficulty)
         else:
-            text_acq.draw(display, x_center, 40)
+            text_acq.draw(display, x_center//2, 40)
         pygame.display.update()
         
         next_t = next_t + dt

@@ -159,7 +159,7 @@ def level_2(path_to_data_folder, calibration):
         if acquisition_started:
             data.record_mpu6050_data(t, cursor, sublvl_index, n_try)
         else:
-            text_acq.draw(display, x_center, 40)
+            text_acq.draw(display, x_center//2, 40)
 
     pygame.quit()
     #plot_session_graphs(data.path_to_csv_file, game_id=2)
