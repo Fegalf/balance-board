@@ -72,7 +72,7 @@ def level_2(path_to_data_folder, calibration):
     dt = 0.023    # a verifier quelle est la frequence d'echantillonage
     next_t = dt
     display.fill(bg_color)
-    just_finished = False
+    just_finished = True
     acquisition_started = False
 
     def get_projection_on_path(cursor, angle_of_path):
