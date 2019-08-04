@@ -57,13 +57,17 @@ def level_0(path_to_data_folder, calibration):
                 if event.key == pygame.K_ESCAPE:
                     run = False
                 if (event.key == pygame.K_SPACE) or (event.key == pygame.K_RETURN):
+                    if not acquisition_started:
+                        t0 = t
                     acquisition_started = True
+                    
 
         # Draw background and circles.
         display.fill(bg_color)
 
         if not acquisition_started:
             small_circle.draw(display)
+
         # Draw cursor.
         cursor.draw(display)
         

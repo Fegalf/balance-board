@@ -71,6 +71,8 @@ def level_1(path_to_data_folder, calibration):
                 if event.key == pygame.K_ESCAPE:
                     run = False
                 if (event.key == pygame.K_SPACE) or (event.key == pygame.K_RETURN):
+                    if not acquisition_started:
+                        t0 = t
                     acquisition_started = True
 
         # If cursor is outside BIG circle, background is RED.
