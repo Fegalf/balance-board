@@ -127,6 +127,9 @@ def level_2(path_to_data_folder, calibration):
                     text_timer.change_text(remaining_time)
                     course.update_colors(bg_color)
 
+                else:
+                    timer.reset()
+
             else:
                 just_finished = False
                 bg_color = ORANGE
