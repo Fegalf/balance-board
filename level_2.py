@@ -167,7 +167,7 @@ def level_2(path_to_data_folder, calibration):
         pygame.display.update()
 
         next_t = next_t + dt
-        pause = next_t - (time.time() - t0)
+        pause = next_t - (time.time() - t0) 
         if (pause>0):
             time.sleep(pause)
         if acquisition_started:

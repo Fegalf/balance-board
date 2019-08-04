@@ -85,6 +85,7 @@ class FilledCircle(EmptyCircle):
         pygame.gfxdraw.filled_circle(display, self.x, self.y, self.R, self.color)
         pygame.gfxdraw.aacircle(display, self.x, self.y, self.R, BLACK)
         pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-1, BLACK)
+        pygame.gfxdraw.aacircle(display, self.x, self.y, self.R-2, BLACK)
 
     def update_color(self, new_color):
         self.color = new_color
@@ -132,7 +133,7 @@ class Course:
         return self.start_circle.cursor_is_inside(cursor)
 
     def draw(self, display):
-        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 1)
+        pygame.draw.line(display, GREY, (self.x_start, self.y_start), (self.x_end_guide, self.y_end_guide), 3)
         self.line.draw(display)
         self.start_circle.draw(display)
 
