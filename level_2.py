@@ -151,8 +151,8 @@ def level_2(path_to_data_folder, calibration):
                 course = Course(*SUBLEVELS[sublvl_index], new_distance)
                 timer.reset()
         else:
-            time.reset()
-            
+            timer.reset()
+
         # Draw text.
         display.fill(bg_color)
         text_timer.draw(display, 100, 75)
