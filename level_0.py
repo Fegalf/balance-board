@@ -40,9 +40,10 @@ def level_0(path_to_data_folder, calibration):
     # Starting game.
     bg_color = GREEN
     run = True
+    acquisition_started = False
+
     while run:
         pygame.mouse.set_visible(False)
-        #pygame.time.delay(10)
         t = time.time() - t0
         cursor.update_position()
         # Exit game if "escape" or window's "X" are pressed.
@@ -52,16 +53,21 @@ def level_0(path_to_data_folder, calibration):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                if event.key == pygame.K_SPACE:
+                    acquisition_started = True
 
         # Draw background and circles.
         display.fill(bg_color)
-        small_circle.draw(display)
+        
+        if not acquisition_started:
+            small_circle.draw(display)
 
         # Draw cursor.
         cursor.draw(display)
         
         # Record data. 
-        data.record_mpu6050_data(t, cursor)
+        if acquisition_started:
+            data.record_mpu6050_data(t, cursor)
         pygame.display.update()
         
         next_t = next_t + dt
