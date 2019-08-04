@@ -114,38 +114,39 @@ def level_2(path_to_data_folder, calibration):
                         next_t = 0
                     acquisition_started = True
 
-        if course.cursor_inside_start_circle(cursor):
-            bg_color = ORANGE
-            if not just_finished:
-                bg_color = GREEN
-                remaining_time = str(timer.get_remaining_time())
-                text_timer.change_text(remaining_time)
-                course.update_colors(bg_color)
+        if acquisition_started:
+            if course.cursor_inside_start_circle(cursor):
+                bg_color = ORANGE
+                if not just_finished:
+                    bg_color = GREEN
+                    remaining_time = str(timer.get_remaining_time())
+                    text_timer.change_text(remaining_time)
+                    course.update_colors(bg_color)
 
-        else:
-            just_finished = False
-            bg_color = ORANGE
-            course.update_colors(bg_color)
-            timer.reset()
-            text_timer.hide()
-
-        if timer.is_over():
-            if n_try < (NUMBER_OF_TRIAL-1):
-                n_try += 1
             else:
-                sublvl_index += 1
-                max_distance_reached = 0
-                text_lvl.change_text(str(sublvl_index))
-                n_try = 0 
-                if sublvl_index == len(SUBLEVELS):
-                    display_congrats(display, bg_color, WHITE)
-                    run = False
-                    break
-            just_finished = True
-            new_distance = max_distance_reached
-            course = Course(*SUBLEVELS[sublvl_index], new_distance)
-            timer.reset()
-        
+                just_finished = False
+                bg_color = ORANGE
+                course.update_colors(bg_color)
+                timer.reset()
+                text_timer.hide()
+
+            if timer.is_over():
+                if n_try < (NUMBER_OF_TRIAL-1):
+                    n_try += 1
+                else:
+                    sublvl_index += 1
+                    max_distance_reached = 0
+                    text_lvl.change_text(str(sublvl_index))
+                    n_try = 0 
+                    if sublvl_index == len(SUBLEVELS):
+                        display_congrats(display, bg_color, WHITE)
+                        run = False
+                        break
+                just_finished = True
+                new_distance = max_distance_reached
+                course = Course(*SUBLEVELS[sublvl_index], new_distance)
+                timer.reset()
+            
         # Draw text.
         display.fill(bg_color)
         text_timer.draw(display, 100, 75)

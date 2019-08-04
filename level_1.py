@@ -80,31 +80,33 @@ def level_1(path_to_data_folder, calibration):
         # If cursor is outside BIG circle, background is RED.
         # If cursor in inside between SMALL and BIG circles, background is ORANGE. 
         # If cursor in inside SMALL circle, background is GREEN and timer starts.
-        if big_circle.cursor_is_inside(cursor):
-            if not small_circle.cursor_is_inside(cursor):
-                bg_color = ORANGE
+
+        if acquisition_started:
+            if big_circle.cursor_is_inside(cursor):
+                if not small_circle.cursor_is_inside(cursor):
+                    bg_color = ORANGE
+                    timer_10s.reset()
+                    text_timer.hide()
+
+                else:
+                    bg_color = GREEN
+                    remaining_time = str(timer_10s.get_remaining_time())
+                    text_timer.change_text(remaining_time)
+
+            else:
+                bg_color = RED
                 timer_10s.reset()
                 text_timer.hide()
 
-            else:
-                bg_color = GREEN
-                remaining_time = str(timer_10s.get_remaining_time())
-                text_timer.change_text(remaining_time)
-
-        else:
-            bg_color = RED
-            timer_10s.reset()
-            text_timer.hide()
-
-        if timer_10s.is_over():
-            difficulty += 1
-            if difficulty == n_difficulty_levels:
-                display_congrats(display, bg_color, WHITE)
-                run = False
-                break
-            new_radius = small_circle_r - int((difficulty / 10) * big_circle_r)
-            small_circle.update_radius(new_radius)
-            timer_10s.reset()
+            if timer_10s.is_over():
+                difficulty += 1
+                if difficulty == n_difficulty_levels:
+                    display_congrats(display, bg_color, WHITE)
+                    run = False
+                    break
+                new_radius = small_circle_r - int((difficulty / 10) * big_circle_r)
+                small_circle.update_radius(new_radius)
+                timer_10s.reset()
 
         # Draw background and circles.
         display.fill(bg_color)
