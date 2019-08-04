@@ -58,7 +58,8 @@ def level_0(path_to_data_folder, calibration):
                     run = False
                 if (event.key == pygame.K_SPACE) or (event.key == pygame.K_RETURN):
                     if not acquisition_started:
-                        t0 = t
+                            t0 = time.time()
+                            next_t = dt
                     acquisition_started = True
                     
 
